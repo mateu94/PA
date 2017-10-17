@@ -1,0 +1,5 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/marc/MIRI/PA/PA_Project/PA.srcs/sources_1/new/Registers.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Registers
+WARNING: [VRFC 10-1315] redeclaration of ansi port q is not allowed [/home/marc/MIRI/PA/PA_Project/PA.srcs/sources_1/new/Registers.v:30]
+INFO: [VRFC 10-2263] Analyzing Verilog file "/home/marc/MIRI/PA/PA_Project/PA.sim/sim_1/behav/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
