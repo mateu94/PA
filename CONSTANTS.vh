@@ -11,4 +11,4 @@
 `define TLBWRITE 6'h32
 `define IRET 6'h33
 
-`define ALU_X 31'hxxxxxxxx
+`define ALU_X 32'hxxxxxxxx
