@@ -29,7 +29,7 @@ module ALU(
     output [31:0] w
 );
 
-reg [31:0] w_out;
+    reg [31:0] w_out;     // This does not infer proper registers with clock (that's not what declaring the signal of reg type means), it infers a multiplexer with constant assignment)
 
        always @(*) begin    
         case (op)
