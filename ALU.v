@@ -32,14 +32,14 @@ reg [31:0] w_out;
            
     always @(*) begin
         case (op)
-            `ADD : w_out <= x + y;
+            `ADD : w_out <= x + y;                     // carry bit,zero bit,  logic for status register? Doesn't BEQ use the zero bit?
             `SUB : w_out <= x - y;
-            `MUL : w_out <= x * y;
-            `LDB : ;
+            `MUL : w_out <= x * y;                     
+            `LDB : ; // LDW
             `STB : ;
             `STW : ;
             `MOV : ;
-            `BEQ : ;
+            `BEQ : ;                                    // Where do we compute the difference of the register. and then check if it is zero 
             `JUMP : ;
             `TLBWRITE : ;
             `IRET : ;
