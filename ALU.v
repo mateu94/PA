@@ -1,5 +1,6 @@
+
 `timescale 1ns / 1ps
-`include "CONSTANTS.vh"
+`include "CONSTANTS.v"
 //////////////////////////////////////////////////////////////////////////////////
 // Company: 
 // Engineer: 
@@ -21,31 +22,34 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module ALU(
-    input clk,
-    input [3:0] op,
+//    input clk,
+    input [6:0] op,
     input [31:0] x,
     input [31:0] y,
     output [31:0] w
 );
 
 reg [31:0] w_out;
-           
-    always @(*) begin
+
+       always @(*) begin    
         case (op)
-            `ADD : w_out <= x + y;                     // carry bit,zero bit,  logic for status register? Doesn't BEQ use the zero bit?
-            `SUB : w_out <= x - y;
-            `MUL : w_out <= x * y;                     
-            `LDB : ; // LDW
+            `ADD : assign w_out = x + y;
+            `SUB : assign w_out = x - y;
+            `MUL : assign w_out = x * y;
+            `LDB : ;
+            `LDW : ;
             `STB : ;
             `STW : ;
             `MOV : ;
-            `BEQ : ;                                    // Where do we compute the difference of the register. and then check if it is zero 
+            `BEQ : ;
             `JUMP : ;
             `TLBWRITE : ;
             `IRET : ;
-            default: w_out <= `ALU_X;
+            default: assign w_out = `ALU_X;
+         
         endcase
-    end
+       end
        
    assign w = w_out;
 endmodule
+
