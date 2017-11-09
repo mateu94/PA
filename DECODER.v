@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 29.10.2017 22:36:23
+// Create Date: 09.11.2017 10:55:24
 // Design Name: 
-// Module Name: Registers_Bank
+// Module Name: DECODER
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,24 +20,20 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module Registers_Bank(
+module DECODER(
     input clk,
-    input [4:0] addr_a,
-    input addr_b,
-    input addr_d,
-    input data,
-    input write,
-    output a,
-    output b
-);
-
-    Register rb[4:0] (clk, data, write, q);
-
-    integer addr_a_int;
+    input [31:0] ir,
+    output [6:0] op,
+    output [4:0] addr_a,
+    output addr_b,
+    output addr_d
+    );
     
-    always @(addr_a)
-        addr_a_int = addr_a;
-
-    assign a = rb[addr_a_int];
-   
+    assign op = ir[31:25];
+    assign addr_a = ir[19:15];
+    assign addr_b = ir[14:10];
+    assign addr_d = ir[24:20];
+    assign offset = ir[14:0];
+    assign offsetLo = ir[9:0];
+    
 endmodule
