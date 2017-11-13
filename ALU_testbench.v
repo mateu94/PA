@@ -35,16 +35,123 @@ module ALU_testbench(
     reg [31:0] x;
     reg [31:0] y;
     wire [31:0] w;
-    ALU test(clk, op, x, y, w);
-        
-    initial
-        clk=1'b0;
-        always #10 clk = ~clk;
-    initial
-    #20
+    ALU test(op, x, y, w);
+            
+    always #1 clk = ~clk;
+    
+    initial 
     begin
+        clk = 1'b0;
+                
+        //SUM of 2 positive numbers
         op = `ADD;
         x = 32'h00000001;
         y = 32'h00000002;
+        #10
+        
+        //SUM of 2 negative numbers
+        op = `ADD;
+        x = 32'hFFFFFFFF;
+        y = 32'hFFFFFFFE;
+        #10
+        
+        //SUM of 1 positive number and 1 negative number
+        op = `ADD;
+        x = 32'h00000001;
+        y = 32'hFFFFFFFF;
+        #10
+        
+        //SUM of 1 negative number and 1 positive number
+        op = `ADD;
+        x = 32'hFFFFFFFF;
+        y = 32'h00000001;
+        #10
+        
+        //SUM of 2 positive numbers with overflow
+        op = `ADD;
+        x = 32'h0FFFFFFF;
+        y = 32'h00000001;
+        #10
+        
+        //SUM of 2 negative numbers with overflow
+        op = `ADD;
+        x = 32'h80000000;
+        y = 32'hFFFFFFFF;
+        #10
+        
+        //SUB of 2 positive numbers
+        op = `SUB;
+        x = 32'h00000003;
+        y = 32'h00000002;
+        #10
+        
+        //SUB of 2 negative numbers
+        op = `SUB;
+        x = 32'hFFFFFFFD;
+        y = 32'hFFFFFFFF;
+        #10
+        
+        //SUB of 1 positive number and 1 negative number
+        op = `SUB;
+        x = 32'h00000003;
+        y = 32'hFFFFFFFF;
+        #10
+        
+        //SUB of 1 negative number and 1 positive number
+        op = `SUB;
+        x = 32'hFFFFFFFF;
+        y = 32'h00000003;
+        #10
+        
+        //MUL of 2 positive numbers
+        op = `MUL;
+        x = 32'h00000003;
+        y = 32'h00000002;
+        #10
+        
+        //MUL of 2 negative numbers
+        op = `MUL;
+        x = 32'hFFFFFFFD;
+        y = 32'hFFFFFFFE;
+        #10
+        
+        //MUL of 1 positive number and 1 negative number
+        op = `MUL;
+        x = 32'h00000003;
+        y = 32'hFFFFFFFE;
+        #10
+        
+        //MUL of 1 negative number and 1 positive number
+        op = `MUL;
+        x = 32'hFFFFFFFE;
+        y = 32'h00000003;
+        #10
+        
+        //MUL of 1 negative number and 1 positive number
+        op = `MUL;
+        x = 32'hFFFFFFFE;
+        y = 32'h00000003;
+        #10
+        
+        //MUL of 2 positive numbers with overflow
+        op = `MUL;
+        x = 32'h0FFFFFFF;
+        y = 32'h00000002;
+        #10
+        
+        //MUL of 2 negative numbers with overflow
+        op = `MUL;
+        x = 32'h80000000;
+        y = 32'hFFFFFFFE;
+        #10
+        
+        //MUL of 1 positive number with 1 negative number with overflow
+        op = `MUL;
+        x = 32'h0FFFFFFF;
+        y = 32'hF0000002;
+                
+        $finish;
     end
+    
+
 endmodule
