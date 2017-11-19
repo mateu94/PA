@@ -8,8 +8,7 @@ reg [7:0] Mem[1024:0];
 reg [7:0] Data_out;
 reg oe_r;
 
-// When read. In all other situations 
-//(even at chip select = 0) Data has high impedence
+// When read. In all other situations (even at chip select = 0), Data has high impedence
 assign Data = (CS && OE && ! WE ) ? Data_out : 8'bz;
 // Memory Write Block 
   // Write Operation : When we = 1, cs = 1
