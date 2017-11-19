@@ -34,8 +34,8 @@ reg [31:0] w_out;
             `ADD : w_out <= x + y;
             `SUB : w_out <= x - y;
             `MUL : w_out <= x * y;
-            `LDB : ;
-            `LDW : ;
+            `LDB : w_out <= x + y;
+            `LDW : w_out <= x + y;
             `STB : ;
             `STW : ;
             `MOV : ;
@@ -43,7 +43,7 @@ reg [31:0] w_out;
             `JUMP : ;
             `TLBWRITE : ;
             `IRET : ;
-            default: w_out <= `ALU_X;
+            default: w_out <= `X32;
         endcase
     end
        

@@ -10,5 +10,4 @@
 `define JUMP 7'h31
 `define TLBWRITE 7'h32
 `define IRET 7'h33
-
-`define ALU_X 32'hxxxxxxxx
+`define X32 32'hXXXXXXXX

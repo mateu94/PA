@@ -36,12 +36,17 @@ module ALU_testbench(
     reg [31:0] y;
     wire [31:0] w;
     ALU test(op, x, y, w);
+    
+    reg [31:0] prova;
+    reg [14:0] imm;
             
     always #1 clk = ~clk;
     
     initial 
     begin
         clk = 1'b0;
+        imm = 15'b100000000000111;
+        prova <= $signed(imm);
                 
         //SUM of 2 positive numbers
         op = `ADD;

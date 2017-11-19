@@ -22,9 +22,9 @@
 
 module Register(
     input clk,
-    input data,
+    input [31:0] data,
     input write,
-    output q
+    output [31:0] q
 );
 
 FlipFlop r[31:0] (clk, data, write, q);
