@@ -33,16 +33,13 @@ module Registers_Bank(
 
     Register rb[31:0] (clk, data, write, q);
 
-    integer addr_a_int;
-    integer addr_b_int;
+    reg [31:0] a;
+    reg [31:0] b;
 
     always @(addr_a, addr_b)
         begin
-            addr_a_int = addr_a;
-            addr_b_int = addr_b;
+            a <= rb[addr_a];
+            b <= rb[addr_b];
         end
-
-    assign a = rb[addr_a_int];
-    assign b = rb[addr_b_int];
    
 endmodule

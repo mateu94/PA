@@ -27,7 +27,7 @@ module ALU(
     output [31:0] w
 );
 
-reg [31:0] w_out;
+    reg [31:0] w_out;
            
     always @(*) begin
         case (op)
@@ -36,8 +36,8 @@ reg [31:0] w_out;
             `MUL : w_out <= x * y;
             `LDB : w_out <= x + y;
             `LDW : w_out <= x + y;
-            `STB : ;
-            `STW : ;
+            `STB : w_out <= x + y;
+            `STW : w_out <= x + y;
             `MOV : ;
             `BEQ : ;
             `JUMP : ;

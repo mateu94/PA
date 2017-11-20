@@ -30,7 +30,11 @@ module DataPath(
     input [31:0] immed,
     input y_sel,
     input [31:0] data,
-    input write
+    input write,
+    
+    output a_out,
+    output b_out,
+    output w_out
     );
     
     reg [31:0]a_sign;
@@ -41,7 +45,7 @@ module DataPath(
     reg [31:0]y_sign;
 
     Registers_Bank registers(clk, addr_a, addr_b, addr_d, data, write, a_sign, b_sign);
-    ALU alu(op, x_sign, y_sign, w_sign);
+    ALU alu(op, a_sign, b_sign, w_sign);
     
     case (y_sel)
         1'b0: y_sign = immed;
@@ -49,4 +53,7 @@ module DataPath(
         default: y_sign = `X32;
     endcase
     
+    assign a_out = a_sign;
+    assign b_out = b_sign;
+    assign w_out = w_sign;
 endmodule

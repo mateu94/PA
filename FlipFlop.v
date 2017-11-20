@@ -27,16 +27,11 @@ module FlipFlop(
     output q
 );
 
-reg q;
-//reg p;
-
-//Registers r1(clk, data, write, q);
-
-always @(posedge clk)
-    begin
-        if (write == 1)
-            q <= data;
-            //p <= data;
-    end
-   
+    reg q;
+    
+    always @(posedge clk)
+        begin
+            if (write == 1)
+                q <= data;
+        end   
 endmodule
