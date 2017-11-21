@@ -1,0 +1,15 @@
+####SHORT TIME####
+- Fix the Register Bank issue
+- Make a Register Bank Testbench
+- Include Memory
+- Make the control Module (NOW only for counting the PC and other small staff)
+- Connect all the modules in order to have a no-pipelined processor
+- Look for a program to convert from C to Assembler, use it with the testbenchs and personal programs, and fill the memory with these assembler instructions (look for which positions the code (instructions) has to be placed)
+
+####LONG TIME####
+- Pipeline the stages
+- Control the data, structural and control flow hazards
+- Include Data Cache
+- Include Instructions Cache
+- Separate the MULT operation from the ALU in another module (and DIV?)
+- Be happy
