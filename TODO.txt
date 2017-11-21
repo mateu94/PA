@@ -2,14 +2,15 @@
 - Fix the Register Bank issue
 - Make a Register Bank Testbench
 - Include Memory
+- Make a testbench for Memory 
 - Make the control Module (NOW only for counting the PC and other small staff)
-- Connect all the modules in order to have a no-pipelined processor
-- Look for a program to convert from C to Assembler, use it with the testbenchs and personal programs, and fill the memory with these assembler instructions (look for which positions the code (instructions) has to be placed)
+- Connect all the modules in order to have a no-pipelined processor*** Can that be done when we have a clock input for each stage? Do you mean that we keep the clock and update the PC only after an instruction has completed executing?***
+- Look for a program to convert from C to Assembler, use it with the testbenchs and personal programs, and fill the memory with these assembler instructions (look for which positions the code (instructions) has to be placed) 
 
 ####LONG TIME####
 - Pipeline the stages
 - Control the data, structural and control flow hazards
 - Include Data Cache
 - Include Instructions Cache
-- Separate the MULT operation from the ALU in another module (and DIV?)
-- Be happy
+- Separate the MULT operation from the ALU in another module (and DIV? )  *** there is no DIV ***
+- Be happy   *** Yay! Weeeeeeeee ***
