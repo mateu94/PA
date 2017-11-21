@@ -22,18 +22,32 @@
 module Decoder(
     input clk,
     input [31:0] ir,
+    
     output [6:0] op,
+    output y_sel,           //Selector for reading src2 or offset
+    output write,           //write enabled
     output [4:0] addr_a,
-    output addr_b,
-    output addr_d
+    output [4:0] addr_b,
+    output [4:0] addr_d,
+    output [31:0] offset,
+    output [9:0] offsetLo,
+    output [0:4] offsetHi
     );
+    
+    reg y_sel;
     
     assign op = ir[31:25];
     assign addr_a = ir[19:15];
     assign addr_b = ir[14:10];
     assign addr_d = ir[24:20];
-    assign offset = ir[14:0];
+    assign offset = $signed(ir[14:0]);
     assign offsetLo = ir[9:0];
+    assign offsetHi = ir[24:20];
     
+    case (ir[31:25])
+        7'h10, 7'h11, 7'h12, 7'h13: y_sel = 0;
+        default: y_sel = 1;
+    endcase
+
 endmodule
 
