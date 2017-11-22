@@ -30,16 +30,26 @@ module Registers_Bank(
     output [31:0] a,
     output [31:0] b
 );
+    
+    reg [31:0] write_array;
+    reg [31:0] q_array [31:0];
+    
+    reg i;
+    initial
+        begin
+            for(i=0; i<32; i = i+1)
+                write_array[i] = 0;
+        end
 
-    Register rb[31:0] (clk, data, write, q);
+    Register rbank[31:0] (clk, data, write_array, q_array);
 
-    reg [31:0] a;
-    reg [31:0] b;
+    //reg [31:0] a;
+    //reg [31:0] b;
 
     always @(addr_a, addr_b)
         begin
-            a <= rb[addr_a];
-            b <= rb[addr_b];
+            a <= q_array[addr_a];
+            b <= q_array[addr_b];
         end
    
 endmodule
