@@ -36,21 +36,23 @@ module DataPath(
     output [31:0] w_out
     );
     
-    reg [31:0]a_sign;   //output of reg a
-    reg [31:0]b_sign;   //output of reg b
-    reg [31:0]w_sign;   //output of alu
-    reg [31:0]d_sign;   //data to store in the regs (usually w_sign)
+    wire [31:0] a_sign;   //output of reg a
+    wire [31:0] b_sign;   //output of reg b
+    wire [31:0] w_sign;   //output of alu
+    reg [31:0] d_sign;   //data to store in the regs (usually w_sign)
     
-    reg [31:0]y_sign;
+    reg [31:0] y_sign;
 
     Registers_Bank registers(clk, addr_a, addr_b, addr_d, d_sign, write, a_sign, b_sign);
     ALU alu(op, a_sign, y_sign, w_sign);
     
-    case (y_sel)
-        1'b0: y_sign = immed;
-        1'b1: y_sign = b_sign;
-        default: y_sign = `X32;
-    endcase
+    always @(y_sel) begin
+        case (y_sel)
+            1'b0: y_sign = immed;
+            1'b1: y_sign = b_sign;
+            default: y_sign = `X32;
+        endcase
+    end
     
     assign a_out = a_sign;
     assign b_out = b_sign;

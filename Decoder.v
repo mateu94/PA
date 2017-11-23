@@ -33,9 +33,7 @@ module Decoder(
     output [9:0] offsetLo,
     output [0:4] offsetHi
     );
-    
-    reg y_sel;
-    
+        
     assign op = ir[31:25];
     assign addr_a = ir[19:15];
     assign addr_b = ir[14:10];
@@ -43,11 +41,7 @@ module Decoder(
     assign offset = $signed(ir[14:0]);
     assign offsetLo = ir[9:0];
     assign offsetHi = ir[24:20];
-    
-    case (ir[31:25])
-        7'h10, 7'h11, 7'h12, 7'h13: y_sel = 0;
-        default: y_sel = 1;
-    endcase
+    assign y_sel = (ir[31:25] == 7'h10 || ir[31:25] == 7'h11 || ir[31:25] == 7'h12 || ir[31:25] == 7'h13) ? 0 : 1;
 
 endmodule
 

@@ -23,26 +23,27 @@
 module Proc(
     input clk,
     input boot,
-    input ir,
+    input [31:0] ir,
     
     output [31:0] a_out,
     output [31:0] b_out,
     output [31:0] w_out
     );
     
-    reg [6:0]op;
-    reg y_sel;
-    reg write;
-    reg [4:0] addr_a;
-    reg [4:0] addr_b;
-    reg [4:0] addr_d;
-    reg [31:0] offset;
-    reg [9:0] offsetLo;
-    reg [0:4] offsetHi;
-    
+    wire [6:0]op;
+    wire y_sel;
+    wire write;
+    wire [4:0] addr_a;
+    wire [4:0] addr_b;
+    wire [4:0] addr_d;
+    wire [31:0] offset;
+    wire [9:0] offsetLo;
+    wire [0:4] offsetHi;
+    /*
     reg [31:0] a_out;
     reg [31:0] b_out;
     reg [31:0] w_out;
+    */
     
     Decoder dec(clk, ir, op, y_sel, write, addr_a, addr_b, addr_d, offset, offsetLo, offsetHi);
     DataPath datp(clk, op, addr_a, addr_b, addr_d, offset, y_sel, write, a_out, b_out, w_out);

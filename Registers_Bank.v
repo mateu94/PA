@@ -32,7 +32,9 @@ module Registers_Bank(
 );
     
     reg [31:0] write_array;
-    reg [31:0] q_array [31:0];
+    wire [31:0] q_array [31:0];
+    reg [31:0] a_out;
+    reg [31:0] b_out;
     
     reg i;
     initial
@@ -40,16 +42,21 @@ module Registers_Bank(
             for(i=0; i<32; i = i+1)
                 write_array[i] = 0;
         end
-
-    Register rbank[31:0] (clk, data, write_array, q_array);
-
-    //reg [31:0] a;
-    //reg [31:0] b;
+    
+    generate
+        genvar j;
+        for(j=0; j<32; j = j+1) begin
+            Register rbank[31:0] (clk, data, write_array[j], q_array[j]);
+        end
+    endgenerate
 
     always @(addr_a, addr_b)
         begin
-            a <= q_array[addr_a];
-            b <= q_array[addr_b];
+            a_out <= q_array[addr_a];
+            b_out <= q_array[addr_b];
         end
+        
+    assign a = a_out;
+    assign b = b_out;
    
 endmodule

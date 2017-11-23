@@ -27,11 +27,14 @@ module FlipFlop(
     output q
 );
 
-    reg q;
+    reg q_out;
     
     always @(posedge clk)
         begin
             if (write == 1)
-                q <= data;
+                q_out <= data;
         end   
+        
+    assign q = q_out;
+    
 endmodule

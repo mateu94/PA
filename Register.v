@@ -27,7 +27,16 @@ module Register(
     output [31:0] q
 );
 
-FlipFlop r[31:0] (clk, data, write, q);
+    wire [31:0] q_array;
+
+    generate
+        genvar i;
+        for(i=0; i<32; i = i+1) begin
+            FlipFlop r[31:0] (clk, data[i], write, q_array[i]);
+        end
+    endgenerate
+        
+    assign q = q_array;
    
 endmodule
 
