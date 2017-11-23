@@ -6,7 +6,7 @@ module MainMem (clk, CS, OE, WE, Addr, Data);
 
 //Parameters
 parameter Data_Width = 8;
-parameter Addr_Width = 28;
+parameter Addr_Width = 32;
 parameter RamDepth = 1<<Addr_Width;
 
 
