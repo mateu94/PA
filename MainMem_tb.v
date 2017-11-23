@@ -44,7 +44,7 @@ initial
     Data_output_valid=1'b1;
     CS= 1'b1;
     WE= 1'b1;
-    Addr= 32'h100;
+    Addr= 32'hFFFFFFFF;
     Data_output = 8'h76;
     #20
 // read from address 1
@@ -63,7 +63,7 @@ initial
     Data_output_valid=1'b0;
     WE= 1'b0;
     OE= 1'b1;
-    Addr= 32'h10000000;
+    Addr= 32'hFFFFFFFF;
     
   end
 endmodule
