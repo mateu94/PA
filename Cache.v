@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 `include "CONSTANTS.v"
-`include "Memory_Constants.v"
+//`include "Memory_Constants.v"
 ///////////////////////
 // 2-Way Set Associative Cache
 // 4 lines 
@@ -9,10 +9,12 @@
 ///////////////////////
 
 // `define Word_Size 32
-module Cache
+module Cache 
+        #(parameter Word_Size = 32,parameter Block_Size = 4)
+         
         (
          input clk,
-         input reset_pin,
+         input reset,
 
          input read_CPU,
          input write_CPU,
@@ -21,30 +23,30 @@ module Cache
          output reg Stall_PC,
         
          input ready_mem,
-         inout [Word_Size-1:0] Data_Mem,
+         inout [(Word_Size*Block_Size)-1:0] Data_Mem,
          output reg [Word_Size-1:0] Addr_Mem,
          output reg read_Mem,
          output reg write_Mem
          );
-parameter Word_Size = 32;
-parameter Block_Size = 4;
 
-reg address_latch [31:0];
+
+reg [31:0] addr_latch ;
 reg [29:0] tag0[1:0];
 reg[29:0] tag1 [1:0];
 reg[(Word_Size*Block_Size)-1:0] data_cache0 [1:0];
 reg[(Word_Size*Block_Size)-1:0] data_cache1 [1:0];
-reg data_byte[Word_Size-1:0];
-reg data_word[(Word_Size*Block_Size)-1:0];
-reg data_block[127:0];  // check whether needed 
+reg [Word_Size-1:0] data_byte;
+reg [(Word_Size*Block_Size)-1:0]data_word;
+reg [(Word_Size*Block_Size)-1:0]write_word;
+reg [127:0]data_block;  // check whether needed 
 wire hit0;
 wire hit1;
 wire hit;
-reg Store_tag0 [29:0];
-reg Store_tag1 [29:0];
-reg Store_data0 [Word_Size-1:0];  // check the size
-reg Store_data1 [Word_Size-1:0];
-reg counter [1:0];
+reg [29:0] store_tag0 ;
+reg [29:0] store_tag1 ;
+reg [Word_Size-1:0] store_data0 ;  // check the size
+reg [Word_Size-1:0] store_data1 ;
+reg [1:0] counter ;          //haven't used yet 
 wire usedbit0;
 wire usedbit1;
 reg readnotwrite;
@@ -62,10 +64,18 @@ localparam IDLE		= 3'd0,
        
 reg [2:0] state;
 
+assign hit0 = tag0[addr_latch[4]]== addr_latch[31:5];
+assign hit1 = tag1[addr_latch[4]]== addr_latch[31:5];
 assign hit = hit0 || hit1;
+
+assign usedbit0 = store_tag0[28];    // '0' for recently used 
+assign usedbit1 = store_tag1[28];
+
+assign Data_Cpu = read_CPU ? data_word : 8'dZ;
+assign Data_Mem = write_Mem ? write_word : 8'dZ;
 // Cache Controller 
 
-always@(posedge clock or posedge reset)
+always@(posedge clk or posedge reset)
 begin 
      if (reset==1)
         begin 
@@ -74,48 +84,47 @@ begin
               read_Mem <= 'd0;
               write_Mem <= 'd0;
               
-              address_latch <= 'd0;
-              tag0 <= 'd0;
-              tag1 <= 'd0;
-              data_cache0 <= 'd0;
-              data_cache1 <= 'd0;
+              addr_latch <= 'd0;
+              tag0 [0] <= 'd0;
+              tag0 [1] <= 'd0;
+              tag1 [0] <= 'd0;
+              tag1 [1] <= 'd0;
+              data_cache0[0] <= 'd0;
+              data_cache0[1] <= 'd0;
+              data_cache1[0] <= 'd0;
+              data_cache1[1] <= 'd0;
               data_byte <= 'd0;
               data_word <= 'd0;
+              write_word <= 'd0;
               data_block <= 'd0;
-              hit0 = 'd0;
-              hit1 = 'd0;
-              Store_tag0 <= 'd0;
-              Store_tag1 <= 'd0;
-              Store_data0 <= 'd0;
-              Store_data1 <= 'd0;
+              store_tag0 <= 'd0;
+              store_tag1 <= 'd0;
+              store_data0 <= 'd0;
+              store_data1 <= 'd0;
               counter <= 'd0;
-              usedbit0 = 'd0;                    // '0' for recently used 
-              usedbit1 = 'd0;                    // '0' for recently used 
+                               
               readnotwrite = 'd1;
              
               state <= IDLE;
+        end
      else
           begin  
                case (state)
                     IDLE :  begin 
-                            address_latch <= Addr_CPU;
+                            addr_latch <= Addr_CPU;
                             Stall_PC <= 'd0;
                             Addr_Mem <= 'd0;
                             read_Mem <= 'd0;
                             write_Mem <= 'd0;
-                            
+                            write_word <= 'd0;
                             data_byte <= 'd0;
                             data_word <= 'd0;
                             data_block <= 'd0;
-                            hit0 = 'd0;
-                            hit1 = 'd0;
-                            Store_tag0 <= 'd0;
-                            Store_tag1 <= 'd0;
-                            Store_data0 <= 'd0;
-                            Store_data1 <= 'd0;
+                            store_tag0 <= 'd0;
+                            store_tag1 <= 'd0;
+                            store_data0 <= 'd0;
+                            store_data1 <= 'd0;
                             counter <= 'd0;
-                            usedbit0 = 'd0;
-                            usedbit1 = 'd0;
                             
                             if (read_CPU)
                                begin
@@ -133,22 +142,22 @@ begin
                      
                     READ:   begin
                               // hit logic
-                              if ( tag0[addr_latch[4]]== addr_latch[31:5] )
+                              if (hit0)
                                  begin
-                                 hit0<='d1;
+                                 
                                  data_word= data_cache0[addr_latch[4]][(((addr_latch[1:0]+1)*32)-1):(addr_latch[1:0]*32)];
-                                 data_CPU= data_word;
+                                 //Data_CPU= data_word;
                                  //used logic - used bit is the second most significant 
                                  tag0[addr_latch[4]][28]<= 'd0;  //just used
                                  tag1[addr_latch[4]][28]<= 'd1;  
                                  state<= IDLE;
                          
                                  end
-                              else if (tag1[addr_latch[4]]== addr_latch[31:5])
+                              else if (hit1)
                                  begin
-                                 hit1= 'd1;
+                                 
                                  data_word= data_cache1[addr_latch[4]][(((addr_latch[1:0]+1)*32)-1):(addr_latch[1:0]*32)];
-                                 data_CPU= data_word;
+                                 //Data_CPU= data_word;
                                  tag1[addr_latch[4]][28]<= 'd0;  //just used
                                  tag0[addr_latch[4]][28]<= 'd1;                                
                                  state<= IDLE;
@@ -158,7 +167,8 @@ begin
                                 begin 
                                 store_tag0 = tag0[addr_latch[4]];
                                 store_tag1 = tag1[addr_latch[4]];
-                                stall_pc = 'd1;
+                                
+                                Stall_PC = 'd1;
                                
 
                                 if (ready_mem)
@@ -178,8 +188,30 @@ begin
                               read_Mem <= 'd1;
                               Addr_Mem= addr_latch;
                               state <= WAIT;
-                             end                    
-          endcase
-endmodule
+                             end      
+                     WAIT:   begin
+                             // NOT DONE YET !!!! UPDATE Memory depending on Write policy 
+ 
 
+                             //give the Memory data to the CPU
+                             data_word= Data_Mem[(((addr_latch[1:0]+1)*32)-1):(addr_latch[1:0]*32)];
+                             //Data_CPU= data_word;
+                             //Update Cache
+                             if (usedbit1 == 0)
+                                 begin    
+                                 tag0[addr_latch[4]] = addr_latch[31:5];
+                                 data_cache0[addr_latch[4]] = Data_Mem;
+                                 end
+                             else if (usedbit0 == 0)
+                                 begin    
+                                 tag1[addr_latch[4]] = addr_latch[31:5];
+                                 data_cache1[addr_latch[4]] = Data_Mem; 
+                                 end  
+                             
+                             state<= IDLE;       
+                             end              
+          endcase
+          end
+end
+endmodule
 
