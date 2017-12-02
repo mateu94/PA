@@ -33,28 +33,38 @@ module Registers_Bank(
     
     reg [31:0] write_array;
     wire [31:0] q_array [31:0];
+    reg [4:0] addr_d_previous;  //To disbale write signal
     reg [31:0] a_out;
     reg [31:0] b_out;
     
-    reg i;
+    
+    integer i;
     initial
         begin
             for(i=0; i<32; i = i+1)
-                write_array[i] = 0;
+                write_array[i] = 1'b0;
+            addr_d_previous = 5'h0;
         end
     
     generate
         genvar j;
         for(j=0; j<32; j = j+1) begin
-            Register rbank[31:0] (clk, data, write_array[j], q_array[j]);
+            Register rbank(clk, data, write_array[j], q_array[j]);
         end
     endgenerate
-
+    
     always @(addr_a, addr_b)
         begin
             a_out <= q_array[addr_a];
             b_out <= q_array[addr_b];
         end
+    
+    always @(addr_d)
+            begin
+                write_array[addr_d] <= write;
+                if (addr_d != addr_d_previous) write_array[addr_d_previous] <= 1'b0;
+                addr_d_previous = addr_d;
+            end
         
     assign a = a_out;
     assign b = b_out;

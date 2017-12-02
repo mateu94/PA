@@ -21,15 +21,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module ALU_testbench(
-    /*
-    input clk,
-    input [6:0] op,
-    input [31:0] x,
-    input [31:0] y,
-    output [31:0] w
-    */
-    );
+module ALU_testbench();
     reg clk;
     reg [6:0] op;
     reg [31:0] x;

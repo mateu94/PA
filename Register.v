@@ -32,7 +32,7 @@ module Register(
     generate
         genvar i;
         for(i=0; i<32; i = i+1) begin
-            FlipFlop r[31:0] (clk, data[i], write, q_array[i]);
+            FlipFlop r(clk, data[i], write, q_array[i]);
         end
     endgenerate
         
