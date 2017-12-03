@@ -31,7 +31,7 @@ module FlipFlop(
     
     always @(posedge clk)
         begin
-            if (write == 1)
+            if (write == 1'b1)
                 q_out <= data;
         end   
         

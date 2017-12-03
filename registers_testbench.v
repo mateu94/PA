@@ -37,8 +37,7 @@ module registers_testbench();
     initial 
     begin
         clk = 1'b0;
-                
-        #2
+       
         //REG0 <- 1
         addr_a = 5'h1;
         addr_b = 5'h2;
@@ -47,16 +46,20 @@ module registers_testbench();
         write = 1'h1;
         #2
         
-        //READ R0
+        //READ REG0
         addr_a = 5'h0;
-        addr_b = 5'h1;
-        addr_d = 5'h2;
-        data = 32'h00000001;
+        addr_b = 5'h0;
+        addr_d = 5'h0;
+        data = 32'h00000003;
         write = 1'h0;
         #2
         
-        //data = 5
-        data = 32'h00000005;
+        //WRITING AND READING REG1 AT THE SAME TIME
+        addr_a = 5'h1;
+        addr_b = 5'h0;
+        addr_d = 5'h1;
+        data = 32'h00000002;
+        write = 1'h1;
         #2
         
         $finish;

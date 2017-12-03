@@ -53,13 +53,13 @@ module Registers_Bank(
         end
     endgenerate
     
-    always @(addr_a, addr_b)
+    always @(*)
         begin
             a_out <= q_array[addr_a];
             b_out <= q_array[addr_b];
         end
     
-    always @(addr_d)
+    always @(addr_d, write)
             begin
                 write_array[addr_d] <= write;
                 if (addr_d != addr_d_previous) write_array[addr_d_previous] <= 1'b0;
