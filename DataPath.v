@@ -23,6 +23,7 @@
 
 module DataPath(
     input clk,
+    input reset,
     input [6:0] op,
     input [4:0] addr_a,
     input [4:0] addr_b,
@@ -40,18 +41,21 @@ module DataPath(
     wire [31:0] b_sign;   //output of reg b
     wire [31:0] w_sign;   //output of alu
     reg [31:0] d_sign;   //data to store in the regs (usually w_sign)
-    
     reg [31:0] y_sign;
 
-    Registers_Bank registers(clk, addr_a, addr_b, addr_d, d_sign, write, a_sign, b_sign);
+    Registers_Bank registers(clk, reset, addr_a, addr_b, addr_d, d_sign, write, a_sign, b_sign);
     ALU alu(op, a_sign, y_sign, w_sign);
     
-    always @(y_sel) begin
+    always @(y_sel, b_sign, immed) begin
         case (y_sel)
             1'b0: y_sign = immed;
             1'b1: y_sign = b_sign;
             default: y_sign = `X32;
         endcase
+    end
+    
+    always @(w_sign) begin
+        d_sign = w_sign;
     end
     
     assign a_out = a_sign;
