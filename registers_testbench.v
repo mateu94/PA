@@ -22,6 +22,7 @@
 
 module registers_testbench();
     reg clk;
+    reg reset;
     reg [4:0] addr_a;
     reg [4:0] addr_b;
     reg [4:0] addr_d;
@@ -30,15 +31,25 @@ module registers_testbench();
     wire [31:0] a;
     wire [31:0] b;
 
-    Registers_Bank test(clk, addr_a, addr_b, addr_d, data, write, a, b);
+    Registers_Bank test(clk, reset, addr_a, addr_b, addr_d, data, write, a, b);
     
     always #1 clk = ~clk;
     
     initial 
     begin
         clk = 1'b0;
+        
+        //RESET ALL REGISTERS
+        reset = 1'b1;
+        addr_a = 5'h1;
+        addr_b = 5'h2;
+        addr_d = 5'h0;
+        data = 32'h00000001;
+        write = 1'h1;
+        #2
        
         //REG0 <- 1
+        reset = 1'b0;
         addr_a = 5'h1;
         addr_b = 5'h2;
         addr_d = 5'h0;

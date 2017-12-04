@@ -23,18 +23,22 @@
 module FlipFlop_testbench();
     
     reg clk;
+    reg reset;
     reg data;
     reg write;
     wire q;
 
-    FlipFlop test(clk, data, write, q);
+    FlipFlop test(clk, reset, data, write, q);
     
     always #1 clk = ~clk;
     
     initial 
     begin
         clk = 1'b0;
+        reset = 1'b1;
+        #2
         
+        reset = 1'b0;
         data = 1'b1;
         write = 1'b0;
         #2

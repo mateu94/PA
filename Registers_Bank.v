@@ -22,6 +22,7 @@
 
 module Registers_Bank(
     input clk,
+    input reset,
     input [4:0] addr_a,
     input [4:0] addr_b,
     input [4:0] addr_d,
@@ -49,7 +50,7 @@ module Registers_Bank(
     generate
         genvar j;
         for(j=0; j<32; j = j+1) begin
-            Register rbank(clk, data, write_array[j], q_array[j]);
+            Register rbank(clk, reset, data, write_array[j], q_array[j]);
         end
     endgenerate
     

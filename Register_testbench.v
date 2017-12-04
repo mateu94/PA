@@ -23,18 +23,26 @@
 module Register_testbench();
 
     reg clk;
+    reg reset;
     reg [31:0] data;
     reg write;
     wire [31:0] q;
     
-    Register test(clk, data, write, q);
+    Register test(clk, reset, data, write, q);
     
     always #1 clk = ~clk;
     
     initial
     begin
         clk = 1'b0;
+        #2
         
+        reset = 1'b1;
+        data = 32'h00000001;
+        write = 1'b1;
+        #2
+        
+        reset = 1'b0;
         data = 32'h00000001;
         write = 1'b0;
         #2
