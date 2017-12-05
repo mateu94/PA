@@ -24,7 +24,7 @@
 module DataPath(
     input clk,
     input reset,
-    input [6:0] op,
+    input [13:0] op,
     input [4:0] addr_a,
     input [4:0] addr_b,
     input [4:0] addr_d,

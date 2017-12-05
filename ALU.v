@@ -21,7 +21,7 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module ALU(
-    input [6:0] op,
+    input [13:0] op,
     input [31:0] x,
     input [31:0] y,
     output [31:0] w
@@ -32,6 +32,7 @@ module ALU(
     always @(*) begin
         case (op)
             `ADD : w_out <= x + y;
+            //`ADDI : w_out <= x + y;
             `SUB : w_out <= x - y;
             `MUL : w_out <= x * y;
             `LDB : w_out <= x + y;

@@ -49,7 +49,7 @@ module Registers_Bank(
     
     generate
         genvar j;
-        for(j=0; j<32; j = j+1) begin
+        for(j=1; j<32; j = j+1) begin
             Register rbank(clk, reset, data, write_array[j], q_array[j]);
         end
     endgenerate
@@ -66,6 +66,8 @@ module Registers_Bank(
                 if (addr_d != addr_d_previous) write_array[addr_d_previous] <= 1'b0;
                 addr_d_previous = addr_d;
             end
+        
+    assign q_array[0] = 32'h00000000;
         
     assign a = a_out;
     assign b = b_out;
