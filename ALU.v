@@ -32,7 +32,7 @@ module ALU(
     always @(*) begin
         case (op)
             `ADD : w_out <= x + y;
-            //`ADDI : w_out <= x + y;
+            `ADDI : w_out <= x + y;
             `SUB : w_out <= x - y;
             `MUL : w_out <= x * y;
             `LDB : w_out <= x + y;
@@ -40,7 +40,7 @@ module ALU(
             `STB : w_out <= x + y;
             `STW : w_out <= x + y;
             `MOV : ;
-            `BEQ : ;
+            `BEQ : w_out <= (x == y);
             `JUMP : ;
             `TLBWRITE : ;
             `IRET : ;

@@ -43,6 +43,8 @@ module Proc(
     reg [31:0] w_out;
     */
     
+    assign write = 1'b0;
+    
     Decoder dec(clk, ir, op, y_sel, write, addr_a, addr_b, addr_d, immed);
     DataPath datp(clk, reset, op, addr_a, addr_b, addr_d, immed, y_sel, write, a_out, b_out, w_out);
 

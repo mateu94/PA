@@ -15,7 +15,7 @@
 // 
 // Revision:
 // Revision 0.01 - File Created
-// Additional Comments:
+// Additional Comments: This testbench doesn't write on regs bank, only to see if the decoding and output is correct
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -40,7 +40,32 @@ module Proc_testbench();
         //ADDI REG0, 5 -> REG0
         reset = 1'b0;
         ir = 32'b000000000101_00000_000_00000_0010011;
-        #2 
+        #2
+        
+        //LDB REG0, 6(REG0)
+        ir = 32'b000000000110_00000_000_00000_0000011;
+        #2
+        
+        //LDW REG0, 8(REG0)
+        ir = 32'b000000001000_00000_010_00000_0000011;
+        #2
+        
+        //STB 10(REG0), REG0
+        ir = 32'b0000000_00000_00000_000_01010_0100011;
+        #2
+        
+        //STW 12(REG0), REG0
+        ir = 32'b0000000_00000_00000_010_01100_0100011;
+        #2
+        
+        //BEQ 12, REG0, REG1
+        ir = 32'b0000000_00001_00000_000_11000_1100011;
+        #2
+        
+        //JUMP 4000, REG1
+        ir = 32'b0_1111010000_1_0000000_00000_1101111;
+        #2
+        
         $finish;
     end
 
