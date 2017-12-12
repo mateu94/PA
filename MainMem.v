@@ -18,17 +18,20 @@ parameter RamDepth =  1<<Addr_Width;
   reg [Data_Width-1:0] Data_out;
   reg oe_r;
   reg [2:0] count;
-
+  reg read_hold;
+  reg write_hold;
 
 // When read. In all other situations 
 //(even at chip select = 0) Data has high impedence
-assign Data = (CS && OE && ! WE ) ? Data_out : 128'bz;
+assign Data = (CS && read_hold && ! WE ) ? Data_out : 128'bz;
 //  Memory Write Block 
  // Write Operation : When WE = 1, CS = 1
 initial
 begin
 count <= 'd7;
 Ready_Mem='b1;
+read_hold='d0;
+write_hold='d0;
 end
  always @ (posedge clk && count ==7)
  begin
@@ -37,6 +40,7 @@ end
      Ready_Mem='b0;
      count <= 'd1;
      Mem[Addr] = Data;
+     write_hold= 'd1;
      end
  end
 
@@ -46,6 +50,8 @@ always @ (posedge clk && count!=7)
   if(count==6)
      begin
      Ready_Mem='b1;
+     read_hold='d0;
+     write_hold='d0;
      end
   end
  
@@ -56,6 +62,7 @@ always @ (posedge clk && count!=7)
 // Ready_Mem='b0;
    if (CS &&  ! WE && OE)
     begin
+    read_hold='d1;
     Ready_Mem='b0;
     count <= 'd1;
     Data_out = Mem[Addr];
