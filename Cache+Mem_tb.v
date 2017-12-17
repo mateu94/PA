@@ -35,11 +35,10 @@ initial
     Addr_CPU= 32'h0;
     #10
  reset= 1'b0;
-/*
-// write 'hFFFFFFFFFFFFF' into address 1
+// write 'hFFFFFFFFFFFFF' into address 5
     Data_output_valid=1'b1;
     write_CPU= 1'b1;
-    Addr_CPU= 32'h1;
+    Addr_CPU= 32'h5;
     Data_output = 32'h55;
     #10
     write_CPU=1'b0;
@@ -49,8 +48,17 @@ initial
     write_CPU= 1'b0;
     read_CPU= 1'b1;
     Addr_CPU= 32'h1;
+    #10
+    read_CPU= 1'b0;
     #50
-*/
+//read from address 5
+    Data_output_valid=1'b0;
+    write_CPU= 1'b0;
+    read_CPU= 1'b1;
+    Addr_CPU= 32'h5;
+    #10
+    read_CPU= 1'b0;
+    #50
 // write 'h77' into address ff0
     Data_output_valid=1'b1;
     read_CPU=1'b0;
@@ -65,6 +73,8 @@ initial
     write_CPU= 1'b0;
     read_CPU= 1'b1;
     Addr_CPU= 32'hff0;
+    #10
+    read_CPU = 1'b0;
     #50
 
 // write 'h88' into address ff0
@@ -82,8 +92,16 @@ initial
     write_CPU= 1'b0;
     read_CPU= 1'b1;
     Addr_CPU= 32'hff0;
-    #50
-read_CPU=1'b0;
+    #10
+    read_CPU=1'b0;
+
+//read from address 1ff0
+    Data_output_valid=1'b0;
+    write_CPU= 1'b0;
+    read_CPU= 1'b1;
+    Addr_CPU= 32'h1ff0;
+    #10
+    read_CPU=1'b0;
 
 /*
 // write 'h76' into address 2
