@@ -28,12 +28,12 @@ assign Data = (CS && read_hold && ! WE ) ? Data_out : 128'bz;
  // Write Operation : When WE = 1, CS = 1
 initial
 begin
-count <= 'd7;
+count <= 'd5;
 Ready_Mem='b1;
 read_hold='d0;
 write_hold='d0;
 end
- always @ (posedge clk && count ==7)
+ always @ (posedge clk && count ==5)
  begin
     if ( CS && WE ) 
      begin
@@ -44,10 +44,10 @@ end
      end
  end
 
-always @ (posedge clk && count!=7)
+always @ (posedge clk && count!=5)
   begin
   count <= count+1;
-  if(count==6)
+  if(count==4)
      begin
      Ready_Mem='b1;
      read_hold='d0;
@@ -57,7 +57,7 @@ always @ (posedge clk && count!=7)
  
  // Memory Read Block 
  // Read Operation : When WE = 0, OE = 1, CS = 1
- always @ (negedge clk && count ==7)
+ always @ (negedge clk && count ==5)
  begin 
 // Ready_Mem='b0;
    if (CS &&  ! WE && OE)

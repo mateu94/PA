@@ -4,13 +4,10 @@ module Cache_Mem_testbench();
 //Parameters
  parameter Word_Size = 32;
 parameter Block_Size = 4;
-reg clk, reset, read_CPU, write_CPU;
+reg clk, reset, read_CPU, write_CPU, Bytesel;
 wire [Word_Size-1:0] Data_CPU;
 reg [Word_Size-1:0] Addr_CPU;
 wire Stall_PC;
-wire hit;
-wire [2:0] state;
-wire state_cycle;
 
 //To make the inout port (Data) testable
 wire [Word_Size-1:0] Data_input;
@@ -19,7 +16,7 @@ reg Data_output_valid;
 assign Data_input = Data_CPU;
 assign Data_CPU = (Data_output_valid==1)?Data_output: 32'bZ;
 
-Cache_Mem test( clk, reset, read_CPU, write_CPU, Data_CPU, Addr_CPU, Stall_PC, hit, state, state_cycle);
+Cache_Mem test( clk, reset, read_CPU, write_CPU, Bytesel, Data_CPU, Addr_CPU, Stall_PC);
 
          
 
@@ -35,15 +32,17 @@ initial
     Addr_CPU= 32'h0;
     #10
  reset= 1'b0;
-// write 'hFFFFFFFFFFFFF' into address 5
+// write 'hFFFFFFFFFFFFF' into address 4
     Data_output_valid=1'b1;
     write_CPU= 1'b1;
-    Addr_CPU= 32'h5;
+    Addr_CPU= 32'h4;
     Data_output = 32'h55;
     #10
     write_CPU=1'b0;
+    Data_output_valid=1'b0;
     #120
 //read from address 1
+    Bytesel='d1;
     Data_output_valid=1'b0;
     write_CPU= 1'b0;
     read_CPU= 1'b1;
@@ -51,11 +50,12 @@ initial
     #10
     read_CPU= 1'b0;
     #50
-//read from address 5
+    Bytesel='d0;
+//read from address 4
     Data_output_valid=1'b0;
     write_CPU= 1'b0;
     read_CPU= 1'b1;
-    Addr_CPU= 32'h5;
+    Addr_CPU= 32'h4;
     #10
     read_CPU= 1'b0;
     #50
@@ -67,6 +67,7 @@ initial
     Data_output = 32'h77;
     #10
     write_CPU=1'b0;
+    Data_output_valid=1'b0;
     #120
 //read from address ff0
     Data_output_valid=1'b0;
@@ -85,16 +86,17 @@ initial
     Data_output = 32'h88;
     #10
     write_CPU=1'b0;
+    Data_output_valid=1'b0;
     #50
 
-//read from address 1
+//read from address ff0
     Data_output_valid=1'b0;
     write_CPU= 1'b0;
     read_CPU= 1'b1;
     Addr_CPU= 32'hff0;
     #10
     read_CPU=1'b0;
-
+    #10
 //read from address 1ff0
     Data_output_valid=1'b0;
     write_CPU= 1'b0;
@@ -102,7 +104,35 @@ initial
     Addr_CPU= 32'h1ff0;
     #10
     read_CPU=1'b0;
+    #55
+// write 'h11' into address 1ff0
+    Data_output_valid=1'b1;
+    read_CPU=1'b0;
+    write_CPU= 1'b1;
+    Addr_CPU= 32'hff0;
+    Data_output = 32'h88;
+    #10
+    write_CPU=1'b0;
+    Data_output_valid=1'b0;
+    #50
 
+//read from address 7f0
+    Data_output_valid=1'b0;
+    write_CPU= 1'b0;
+    read_CPU= 1'b1;
+    Addr_CPU= 32'h7f0;
+    #10
+    read_CPU=1'b0;
+    #90
+//read from address ff0
+    Data_output_valid=1'b0;
+    write_CPU= 1'b0;
+    read_CPU= 1'b1;
+    Addr_CPU= 32'hff0;
+    #10
+    read_CPU=1'b0;
+    
+   
 /*
 // write 'h76' into address 2
     Data_output_valid=1'b1;
