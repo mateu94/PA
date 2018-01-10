@@ -24,7 +24,10 @@ module ALU(
     input [13:0] op,
     input [31:0] x,
     input [31:0] y,
-    output [31:0] w
+    input [31:0] pc,
+    output [31:0] w,
+    output [31:0] w_pc,
+    output zero
 );
 
     reg [31:0] w_out;

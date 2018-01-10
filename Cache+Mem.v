@@ -27,7 +27,7 @@ module Cache_Mem
   
     MainMem RAM(.clk(clk), .CS(CS), .OE(read_Mem), .WE(write_Mem), .Addr(Addr_Mem), .Data(Data_Mem), .Ready_Mem(ready_mem));
 
-      Cache Data_Cache (clk, reset, read_CPU, write_CPU, Bytesel, Data_CPU, Addr_CPU, Stall_PC, ready_mem, Data_Mem, Addr_Mem, read_Mem, write_Mem );
+    Cache Data_Cache (clk, reset, read_CPU, write_CPU, Bytesel, Data_CPU, Addr_CPU, Stall_PC, ready_mem, Data_Mem, Addr_Mem, read_Mem, write_Mem );
 
    
 endmodule

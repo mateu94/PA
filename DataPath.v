@@ -34,7 +34,7 @@ module DataPath(
     
     output [31:0] a_out,
     output [31:0] b_out,
-    output [31:0] w_out
+    output [31:0] addr_m
     );
     
     wire [31:0] a_sign;   //output of reg a
@@ -44,7 +44,7 @@ module DataPath(
     reg [31:0] y_sign;
 
     Registers_Bank registers(clk, reset, addr_a, addr_b, addr_d, d_sign, write, a_sign, b_sign);
-    ALU alu(op, a_sign, y_sign, w_sign);
+    ALU alu(op, a_sign, y_sign, w_sign, zero);
     
     always @(y_sel, b_sign, immed) begin
         case (y_sel)
@@ -60,5 +60,6 @@ module DataPath(
     
     assign a_out = a_sign;
     assign b_out = b_sign;
-    assign w_out = w_sign;
+    assign addr_m = w_sign;
+    
 endmodule
