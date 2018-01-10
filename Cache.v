@@ -73,10 +73,10 @@ localparam IDLE		= 3'd0,
 	   READ		= 3'd1,
 	   WRITE	= 3'd2,
 	   READMM	= 3'd3,
-           WAIT	        = 3'd4,
+       WAIT	= 3'd4,
 	   UPDATEMM	= 3'd5,
 	   IDLE_WRITE   = 3'd6,
-           WRITEMM      = 3'd7;
+       WRITEMM      = 3'd7;
        
 reg [2:0] state;
 reg state_cycle;
