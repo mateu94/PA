@@ -1,0 +1,241 @@
+/*
+
+Vivado v2015.4 (64-bit)
+SW Build 1412921 on Wed Nov 18 09:44:32 MST 2015
+Process ID: 4253
+
+Current time: 	1/11/18 3:05:50 PM CET
+Time zone: 	Central European Time (Europe/Madrid)
+
+OS: DISTRIB_ID=Ubuntu
+Version: 4.4.0-96-generic
+Architecture: amd64
+Available processors (cores): 4
+
+DISPLAY: :0
+Screen size: 1920x1080
+Screen resolution (DPI): 96
+Available screens: 1
+Default font: family=Dialog,name=Dialog,style=plain,size=12
+
+Java version: 	1.8.0_45 64-bit
+Java home: 	/home/marc/ompss/Vivado/2015.4/tps/lnx64/jre
+
+User name: 	marc
+User home directory: /home/marc
+User working directory: /home/marc/MIRI/PA/PA_Project_sources
+User country: 	US
+User language: 	en
+User locale: 	en_US
+
+Vivado preferences path: /home/marc/.Xilinx/Vivado/2015.4/vivado.ini
+Vivado layouts directory: /home/marc/.Xilinx/Vivado/2015.4/layouts
+
+GUI allocated memory:	202 MB
+GUI max memory:		3,052 MB
+Engine allocated memory: 4,823 MB
+
+*/
+
+// TclEventType: START_GUI
+// Tcl Message: start_gui 
+// [GUI Memory]: 23 MB (+21951kb) [00:00:05]
+// [Engine Memory]: 4,821 MB (+4904184kb) [00:00:05]
+// HMemoryUtils.trashcanNow. Engine heap size: 4,828 MB. GUI used memory: 21 MB. Current time: 1/11/18 3:05:52 PM CET
+selectList(PAResourceEtoH.GettingStartedView_RECENT_PROJECTS, "/home/marc/MIRI/PA/PA_Project/PA.xpr", 0); // q:v (JViewport:JComponent, cq:JFrame)
+// Opening Vivado Project: /home/marc/MIRI/PA/PA_Project/PA.xpr. Version: Vivado v2015.4 
+// bF:g (cq:JFrame):  Open Project : addNotify
+// TclEventType: DEBUG_PROBE_SET_CHANGE
+// Tcl Message: open_project /home/marc/MIRI/PA/PA_Project/PA.xpr 
+// TclEventType: MSGMGR_MOVEMSG
+// TclEventType: FILE_SET_NEW
+// TclEventType: RUN_FAILED
+// TclEventType: RUN_CURRENT
+// TclEventType: PROJECT_NEW
+// [GUI Memory]: 43 MB (+19479kb) [00:00:09]
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Tcl Message: open_project /home/marc/MIRI/PA/PA_Project/PA.xpr 
+// Tcl Message: Scanning sources... Finished scanning sources 
+// Tcl Message: INFO: [IP_Flow 19-234] Refreshing IP repositories INFO: [IP_Flow 19-1704] No user IP repositories specified INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/home/marc/ompss/Vivado/2015.4/data/ip'. 
+// [GUI Memory]: 55 MB (+9854kb) [00:00:11]
+// TclEventType: FILE_SET_OPTIONS_CHANGE
+// Project name: PA; location: /home/marc/MIRI/PA/PA_Project; part: xc7vx485tffg1157-1
+dismissDialog("Open Project"); // bF:g (cq:JFrame)
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+// Elapsed time: 12 seconds
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, RISCV_testbench (RISCV_testbench.v)]", 4); // y:k (I:JPanel, cq:JFrame)
+expandTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, RISCV_testbench (RISCV_testbench.v), test - RISCV (RISCV.v)]", 5); // y:k (I:JPanel, cq:JFrame)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, RISCV_testbench (RISCV_testbench.v), test - RISCV (RISCV.v), processor - Proc (Proc.v)]", 6, true); // y:k (I:JPanel, cq:JFrame) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, RISCV_testbench (RISCV_testbench.v), test - RISCV (RISCV.v), processor - Proc (Proc.v)]", 6, true, false, false, false, false, true); // y:k (I:JPanel, cq:JFrame) - Double Click - Node
+// Elapsed time: 11 seconds
+selectCodeEditor("Proc.v", 182, 405); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 182, 405); // bl:J (JPanel:JComponent, cq:JFrame)
+// [GUI Memory]: 58 MB (+1116kb) [00:00:58]
+// Elapsed time: 16 seconds
+selectCodeEditor("Proc.v", 276, 394); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 276, 394, false, false, false, false, true); // bl:J (JPanel:JComponent, cq:JFrame) - Double Click
+typeControlKey((HResource) null, "Proc.v", 'c'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 244, 430); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 244, 430, false, false, false, false, true); // bl:J (JPanel:JComponent, cq:JFrame) - Double Click
+typeControlKey((HResource) null, "Proc.v", 'v'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 387, 426); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 387, 426, false, false, false, false, true); // bl:J (JPanel:JComponent, cq:JFrame) - Double Click
+typeControlKey((HResource) null, "Proc.v", 'v'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 359, 426); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 490, 424); // bl:J (JPanel:JComponent, cq:JFrame)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, RISCV_testbench (RISCV_testbench.v), test - RISCV (RISCV.v), processor - Proc (Proc.v), ID_EX - Reg_ID_EX (REG_ID_EX.v)]", 8, true); // y:k (I:JPanel, cq:JFrame) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, RISCV_testbench (RISCV_testbench.v), test - RISCV (RISCV.v), processor - Proc (Proc.v), ID_EX - Reg_ID_EX (REG_ID_EX.v), r - FlipFlop (FlipFlop.v)]", 9, false, false, false, false, false, true); // y:k (I:JPanel, cq:JFrame) - Double Click
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Proc.v", 1); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+// Elapsed time: 16 seconds
+setText(RDIResource.HCodeEditor_SEARCH_TEXT_COMBO_BOX, "pc"); // o:ao (ai:f, cq:JFrame)
+selectCodeEditor("Proc.v", 527, 478); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 549, 558); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 528, 491); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 528, 496); // bl:J (JPanel:JComponent, cq:JFrame)
+// [GUI Memory]: 61 MB (+86kb) [00:02:13]
+// Elapsed time: 27 seconds
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "REG_ID_EX.v", 2); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+// Elapsed time: 16 seconds
+selectCodeEditor("REG_ID_EX.v", 455, 54); // bl:J (JPanel:JComponent, cq:JFrame)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+// Elapsed time: 45 seconds
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Proc.v", 1); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+// HMemoryUtils.trashcanNow. Engine heap size: 4,967 MB. GUI used memory: 29 MB. Current time: 1/11/18 3:09:02 PM CET
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "REG_ID_EX.v", 2); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Proc.v", 1); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "REG_ID_EX.v", 2); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Proc.v", 1); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+selectCodeEditor("Proc.v", 221, 471); // bl:J (JPanel:JComponent, cq:JFrame)
+// Elapsed time: 13 seconds
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "REG_ID_EX.v", 2); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Proc.v", 1); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "REG_ID_EX.v", 2); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Proc.v", 1); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+// Elapsed time: 630 seconds
+selectCodeEditor("Proc.v", 410, 470); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 410, 470, false, false, false, false, true); // bl:J (JPanel:JComponent, cq:JFrame) - Double Click
+typeControlKey((HResource) null, "Proc.v", 'c'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 393, 455); // bl:J (JPanel:JComponent, cq:JFrame)
+// Elapsed time: 30 seconds
+selectCodeEditor("Proc.v", 350, 41); // bl:J (JPanel:JComponent, cq:JFrame)
+typeControlKey((HResource) null, "Proc.v", 'v'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 28, 48); // bl:J (JPanel:JComponent, cq:JFrame)
+// Elapsed time: 10 seconds
+selectCodeEditor("Proc.v", 249, 485); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 249, 485, false, false, false, false, true); // bl:J (JPanel:JComponent, cq:JFrame) - Double Click
+typeControlKey((HResource) null, "Proc.v", 'c'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 347, 40); // bl:J (JPanel:JComponent, cq:JFrame)
+typeControlKey((HResource) null, "Proc.v", 'v'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "REG_ID_EX.v", 2); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+selectCodeEditor("REG_ID_EX.v", 439, 57); // bl:J (JPanel:JComponent, cq:JFrame)
+typeControlKey((HResource) null, "REG_ID_EX.v", 'c'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Proc.v", 1); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+selectCodeEditor("Proc.v", 214, 47); // bl:J (JPanel:JComponent, cq:JFrame)
+typeControlKey((HResource) null, "Proc.v", 'v'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 434, 57); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 434, 57, false, false, false, false, true); // bl:J (JPanel:JComponent, cq:JFrame) - Double Click
+// [GUI Memory]: 66 MB (+1724kb) [00:15:32]
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+// Elapsed time: 18 seconds
+selectCodeEditor("Proc.v", 381, 262); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 381, 262); // bl:J (JPanel:JComponent, cq:JFrame)
+// Elapsed time: 12 seconds
+selectCodeEditor("Proc.v", 391, 383); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 391, 383, false, false, false, false, true); // bl:J (JPanel:JComponent, cq:JFrame) - Double Click
+typeControlKey((HResource) null, "Proc.v", 'c'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 141, 399); // bl:J (JPanel:JComponent, cq:JFrame)
+typeControlKey((HResource) null, "Proc.v", 'v'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 213, 396); // bl:J (JPanel:JComponent, cq:JFrame)
+// Elapsed time: 16 seconds
+selectCodeEditor("Proc.v", 220, 402); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 220, 402, false, false, false, false, true); // bl:J (JPanel:JComponent, cq:JFrame) - Double Click
+typeControlKey((HResource) null, "Proc.v", 'c'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "REG_ID_EX.v", 2); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+// [GUI Memory]: 70 MB (+574kb) [00:16:32]
+selectCodeEditor("REG_ID_EX.v", 232, 283); // bl:J (JPanel:JComponent, cq:JFrame)
+typeControlKey((HResource) null, "REG_ID_EX.v", 'v'); // bl:J (JPanel:JComponent, cq:JFrame)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Proc.v", 1); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+selectCodeEditor("Proc.v", 305, 328); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 152, 86); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 152, 86, false, false, false, false, true); // bl:J (JPanel:JComponent, cq:JFrame) - Double Click
+selectCodeEditor("Proc.v", 152, 86); // bl:J (JPanel:JComponent, cq:JFrame)
+typeControlKey((HResource) null, "Proc.v", 'c'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 282, 241); // bl:J (JPanel:JComponent, cq:JFrame)
+typeControlKey((HResource) null, "Proc.v", 'v'); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 182, 265); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 241, 263); // bl:J (JPanel:JComponent, cq:JFrame)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+// Elapsed time: 18 seconds
+selectCodeEditor("Proc.v", 1186, 552); // bl:J (JPanel:JComponent, cq:JFrame)
+// Elapsed time: 20 seconds
+selectCodeEditor("Proc.v", 312, 296); // bl:J (JPanel:JComponent, cq:JFrame)
+// Elapsed time: 64 seconds
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, RISCV_testbench (RISCV_testbench.v), test - RISCV (RISCV.v), processor - Proc (Proc.v), ID_EX - Reg_ID_EX (REG_ID_EX.v)]", 8); // y:k (I:JPanel, cq:JFrame)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, RISCV_testbench (RISCV_testbench.v), test - RISCV (RISCV.v), processor - Proc (Proc.v), dec - Decode (Decode.v)]", 7, true); // y:k (I:JPanel, cq:JFrame) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, RISCV_testbench (RISCV_testbench.v), test - RISCV (RISCV.v), processor - Proc (Proc.v), dec - Decode (Decode.v)]", 7, true, false, false, false, false, true); // y:k (I:JPanel, cq:JFrame) - Double Click - Node
+// [GUI Memory]: 75 MB (+1635kb) [00:18:55]
+selectCodeEditor("Decode.v", 232, 432); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Decode.v", 232, 432, false, false, false, false, true); // bl:J (JPanel:JComponent, cq:JFrame) - Double Click
+selectCodeEditor("Decode.v", 232, 432); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Decode.v", 236, 442); // bl:J (JPanel:JComponent, cq:JFrame)
+// Elapsed time: 23 seconds
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Proc.v", 1); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+// Elapsed time: 15 seconds
+selectCodeEditor("Proc.v", 263, 503); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 710, 352); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 652, 560); // bl:J (JPanel:JComponent, cq:JFrame)
+// Elapsed time: 26 seconds
+collapseTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, RISCV_testbench (RISCV_testbench.v), test - RISCV (RISCV.v), processor - Proc (Proc.v), dec - Decode (Decode.v)]", 7); // y:k (I:JPanel, cq:JFrame)
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, RISCV_testbench (RISCV_testbench.v), test - RISCV (RISCV.v), processor - Proc (Proc.v), EX_M - RegEX_M (REG_EX_M.v)]", 10, true); // y:k (I:JPanel, cq:JFrame) - Node
+selectTree(PAResourceEtoH.FileSetPanel_FILE_SET_PANEL_TREE, "[root, Design Sources, RISCV_testbench (RISCV_testbench.v), test - RISCV (RISCV.v), processor - Proc (Proc.v), EX_M - RegEX_M (REG_EX_M.v)]", 10, true, false, false, false, false, true); // y:k (I:JPanel, cq:JFrame) - Double Click - Node
+selectTab("PlanAheadTabBaseWorkspace_JideTabbedPane", (HResource) null, "Proc.v", 1); // TdiGroup:JideTabbedPane (CodeEditorDocumentPane:DocumentPane, cq:JFrame)
+// TclEventType: DG_GRAPH_STALE
+// TclEventType: FILE_SET_CHANGE
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+// TclEventType: DG_ANALYSIS_MSG_RESET
+// TclEventType: DG_UPDATE_GRAPH
+// Elapsed time: 107 seconds
+selectCodeEditor("Proc.v", 62, 352); // bl:J (JPanel:JComponent, cq:JFrame)
+selectCodeEditor("Proc.v", 62, 352, false, false, false, false, true); // bl:J (JPanel:JComponent, cq:JFrame) - Double Click
+// Elapsed time: 17 seconds
+selectCodeEditor("Proc.v", 609, 351); // bl:J (JPanel:JComponent, cq:JFrame)
+// Elapsed time: 119 seconds
+selectCodeEditor("Proc.v", 208, 380); // bl:J (JPanel:JComponent, cq:JFrame)
