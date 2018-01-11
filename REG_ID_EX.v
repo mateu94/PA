@@ -39,26 +39,26 @@ module Reg_ID_EX(
     generate
         genvar i;
         for(i=0; i<13; i = i+1) begin
-            FlipFlop r(clk, reset, opcode_in[i], write, opcode_hold[i]);
+            FlipFlop r(clk, reset, opcode_in[i], write_enable, opcode_hold[i]);
         end
 
        
         for(i=0; i<31; i = i+1) begin
-            FlipFlop r(clk, reset, rgS1_data_in[i], write, rgS1_data_hold[i]);
+            FlipFlop r(clk, reset, rgS1_data_in[i], write_enable, rgS1_data_hold[i]);
         end
 
         
         for(i=0; i<31; i = i+1) begin
-            FlipFlop r(clk, reset, rgS2_data_in[i], write, rgS2_data_hold[i]);
+            FlipFlop r(clk, reset, rgS2_data_in[i], write_enable, rgS2_data_hold[i]);
         end
               
-        FlipFlop r_c0(clk, reset, read_mmu, write, control_hold[0]);    //Read from mem
-        FlipFlop r_c1(clk, reset, write_mmu, write, control_hold[1]);   //Write to mem
-        FlipFlop r_c2(clk, reset, byte_select_mmu, write, control_hold[2]); //Byte select for accessing mem
-        FlipFlop r_c3(clk, reset, write_reg, write, control_hold[3]);   //Write to a reg
+        FlipFlop r_c0(clk, reset, read_mmu, write_enable, control_hold[0]);    //Read from mem
+        FlipFlop r_c1(clk, reset, write_mmu, write_enable, control_hold[1]);   //Write to mem
+        FlipFlop r_c2(clk, reset, byte_select_mmu, write_enable, control_hold[2]); //Byte select for accessing mem
+        FlipFlop r_c3(clk, reset, write_reg, write_enable, control_hold[3]);   //Write to a reg
        
         for(i=0; i<4; i = i+1) begin
-            FlipFlop r(clk, reset, rgD_index_in[i], write, rgD_index_hold[i]);
+            FlipFlop r(clk, reset, rgD_index_in[i], write_enable, rgD_index_hold[i]);
         end
     endgenerate
         
