@@ -33,6 +33,15 @@ module Proc(
     inout [31:0] data_mmu
     );
     
+    /*CONTROL[4:0]:
+    CONTROL[0] -> Read From Cache
+    CONTROL[1] -> Write To Cache
+    CONTROL[2] -> Byte Selector (Cache)
+    CONTROL[3] -> Write enable on register
+    CONTROL[4] -> Branch instruction or not
+    CONTROL[5] -> Load instruction or not
+    */ 
+    
     //Connections in the processor
     wire write_enable;
     wire take_branch;
@@ -59,7 +68,7 @@ module Proc(
     wire [31:0] immed_ID_EX_OUT;
     wire y_sel_ID_EX_OUT;
     wire [4:0] rgD_index_out_ID_EX_OUT;
-    wire [3:0] control_ID_EX_OUT;
+    wire [5:0] control_ID_EX_OUT;
     
     //Connections between EX and MEM stages
         //INPUTS
@@ -67,7 +76,7 @@ module Proc(
     wire [31:0] w_pc_EX_M_IN;
     wire [31:0] w_zero_EX_M_IN;
     wire [31:0] rgS2_data_ID_EX_OUT;
-    wire [3:0] control_ID_EX_OUT;
+    wire [5:0] control_ID_EX_OUT;
     wire [4:0] rgD_index_ID_EX_OUT;
     
         //OUTPUTS
@@ -75,7 +84,7 @@ module Proc(
     wire [31:0] w_pc_EX_M_OUT;
     wire [31:0] w_zero_EX_M_OUT;
     wire [31:0] rgS2_data_EX_M_OUT;
-    wire [3:0] control_EX_M_OUT;
+    wire [5:0] control_EX_M_OUT;
     wire [4:0] rgD_index_EX_M_OUT;
     
     //Connection between M and WB stages
@@ -97,7 +106,7 @@ module Proc(
 
     ALU alu(op_ID_EX_OUT, rgS1_data_ID_EX_OUT, rgS2_data_ID_EX_OUT, next_pc_ID_EX_OUT, w_out_EX_M_IN, w_pc_EX_M_IN, w_zero_EX_M_IN);
     
-    RegEX_M EX_M(clk, reset, write_enable, w_out_EX_M_IN, w_pc_EX_M_IN, w_zero_EX_M_IN, rgS2_data_ID_EX_OUT, control_ID_EX_OUT, rgD_index_ID_EX_OUT,
+    Reg_EX_M EX_M(clk, reset, write_enable, w_out_EX_M_IN, w_pc_EX_M_IN, w_zero_EX_M_IN, rgS2_data_ID_EX_OUT, control_ID_EX_OUT, rgD_index_ID_EX_OUT,
                  w_out_EX_M_OUT, w_pc_EX_M_OUT, w_zero_EX_M_OUT, rgS2_data_EX_M_OUT, control_EX_M_OUT, rgD_index_ID_EX_OUT);
     
     //take_branch = (if_branch && zero)

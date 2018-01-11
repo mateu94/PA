@@ -7,12 +7,14 @@ module Reg_M_WB(
     input [31:0] mem_data_in,
     input [31:0] data_in,
    
+    input [5:0] control_in,
     input [4:0] rgD_index_in,
  
     
     output [31:0] mem_data_out,
     output [31:0] data_out,
   
+    output [5:0] control_out,
     output [4:0] rgD_index_out 
 );
 

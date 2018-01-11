@@ -24,7 +24,7 @@ module Reg_ID_EX(
     output [31:0] immed_out,
     output y_sel_out,
 
-    output [3:0] control_out,
+    output [5:0] control_out,
     output [4:0] rgD_index_out 
 );
 
