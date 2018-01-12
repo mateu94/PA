@@ -104,6 +104,7 @@ module Proc(
         //INPUTS
         
         //OUTPUTS
+    wire [31:0] Data_Load;
     wire [31:0] mem_data_out;
     wire [31:0] w_out_M_WB_OUT;
     wire [1:0] control_M_WB_OUT;
@@ -142,7 +143,7 @@ module Proc(
     
     Cache2 Data_Cache(clk, reset, control_EX_M_OUT[0], control_EX_M_OUT[1], control_EX_M_OUT[2], rgS2_data_EX_M_OUT, Data_Load, w_out_EX_M_OUT, stall_pc, ready_mem, Data_Mem, Addr_Mem, read_Mem, write_Mem );    
     
-    Reg_M_WB M_WB(clk, reset, write_enable, Data_load, w_out_EX_M_OUT, control_EX_M_OUT[3], control_EX_M_OUT[5], rgD_index_ID_EX_OUT,
+    Reg_M_WB M_WB(clk, reset, write_enable, Data_Load, w_out_EX_M_OUT, control_EX_M_OUT[3], control_EX_M_OUT[5], rgD_index_ID_EX_OUT,
                   mem_data_out, w_out_M_WB_OUT, control_M_WB_OUT, addr_d_out_M_WB_OUT);                
                       
     assign rgD_index_in = rgD_index_ID_EX_OUT;

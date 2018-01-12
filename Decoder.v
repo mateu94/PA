@@ -77,6 +77,7 @@ module Decoder(
                     y_sel_sign = 1'b0;
                     write_sign = 1'b1;
                     read_mmu_sign = 1'b1;
+                    write_mmu_sign = 1'b0;
                     byte_select_mmu_sign = (op_funct3_sign == `LDB) ? 1 : 0;
                     branch_instr_sign = 1'b0;
                     load_instr_sign = 1'b1;

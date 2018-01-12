@@ -31,7 +31,7 @@ module Proc_testbench();
         
     initial 
     begin
-        clk = 1'b1;
+        clk = 1'b0;
         reset = 1'b1;
         #2
         
@@ -44,9 +44,15 @@ module Proc_testbench();
         ir = 32'b0000000_00001_00000_010_00100_0100011;
         #20
         
+        //ADDI REG0, 5 -> REG1
+        reset = 1'b0;
+        ir = 32'b000000000101_00000_000_00011_0010011;
+        #10
+        
         //LW 4(REG0), REG2
         ir = 32'b000000000100_00000_010_00010_0000011;
         #10
+        
         
         /*
         //ADDI REG0, 2 -> REG2
