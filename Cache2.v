@@ -1,6 +1,5 @@
 
 `timescale 1ns / 1ps
-`include "CONSTANTS.v"
 //`include "Memory_Constants.v"
 ///////////////////////
 // 2-Way Set Associative Cache

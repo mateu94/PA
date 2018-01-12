@@ -27,33 +27,33 @@ module Reg_EX_M(
     wire ALU_zero;
     wire [31:0] data_hold;
 
-    wire [3:0] control_hold;
+    wire [5:0] control_hold;
     wire [4:0] rgD_index_hold;
  
 
     generate
         genvar i;      
-        for(i=0; i<31; i = i+1) begin
+        for(i=0; i<32; i = i+1) begin
             FlipFlop r(clk, reset, address_in[i], write, address_hold[i]);
         end
 
-        for(i=0; i<31; i = i+1) begin
+        for(i=0; i<32; i = i+1) begin
             FlipFlop r(clk, reset, next_pc_in[i], write, next_pc_hold[i]);
         end
         
         FlipFlop r(clk, reset, ALU_zero_in, write, ALU_zero_hold);
 
-        for(i=0; i<31; i = i+1) begin
+        for(i=0; i<32; i = i+1) begin
             FlipFlop r(clk, reset, data_in[i], write, data_hold[i]);
         end
        
        
-        for(i=0; i<3; i = i+1) begin
+        for(i=0; i<6; i = i+1) begin
             FlipFlop r(clk, reset, control_in[i], write, control_hold[i]);
         end
  
        
-        for(i=0; i<4; i = i+1) begin
+        for(i=0; i<5; i = i+1) begin
             FlipFlop r(clk, reset, rgD_index_in[i], write, rgD_index_hold[i]);
         end
     endgenerate

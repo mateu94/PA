@@ -34,16 +34,19 @@ module Decode(
     output [31:0] immed,    //Value immediate
     output y_sel,           //Selector for reading src2 or offset
     output [4:0] addr_d_out,//REG addr that will be written
-    output write_out,       //Indicate if the instruction writes on a REG
+    
     output read_mmu,        //Indicate if the instruction reads from CACHE/MEM
     output write_mmu,       //Indicate if the instruction writes to CACHE/MEM
-    output byte_select_mmu  ////Indicate if the read/write from/to CACHE/MEM is byte/word
-    );
-    
+    output byte_select_mmu  //Indicate if the read/write from/to CACHE/MEM is byte/word
+    output write_out,       //Indicate if the instruction writes on a REG
+    output branch_instr,    //Indicate branch instruction or not
+    output load_instr    //Indicate load instruction or not
+    ); 
+        
     wire addr_a;
     wire addr_b;
         
-    Decoder dec(clk, ir, op, y_sel, write_out, addr_a, addr_b, addr_d_out, immed, read_mmu, write_mmu, byte_select_mmu);
+    Decoder dec(clk, ir, op, y_sel, addr_a, addr_b, addr_d_out, immed, read_mmu, write_mmu, byte_select_mmu, write_out, branch_instr, load_instr);
     Registers_Bank registers(clk, reset, addr_a, addr_b, addr_d_in, d_in, write_in, a_out, b_out);
 
 endmodule

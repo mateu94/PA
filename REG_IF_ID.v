@@ -3,13 +3,11 @@ module Reg_IF_ID(
     input reset,
     input write,
 
-   
-    input [31:0] PC_in,
     input [31:0] next_PC_in,
+    input [31:0] ir_in,
    
-       
-    output [31:0] PC_out,
-    output [31:0] next_PC_out  
+    output [31:0] next_PC_out,
+    output [31:0] ir_out  
     
 );
 
@@ -17,13 +15,13 @@ module Reg_IF_ID(
     wire [31:0] next_PC_hold;
 
     generate
-        genvar i;      
-        for(i=0; i<31; i = i+1) begin
-            FlipFlop r(clk, reset, PC_in[i], write, PC_hold[i]);
+        genvar i;              
+        for(i=0; i<32; i = i+1) begin
+            FlipFlop r(clk, reset, next_PC_in[i], write, next_PC_hold[i]);
         end
         
-        for(i=0; i<31; i = i+1) begin
-            FlipFlop r(clk, reset, next_PC_in[i], write, next_PC_hold[i]);
+        for(i=0; i<32; i = i+1) begin
+            FlipFlop r(clk, reset, ir_in[i], write, ir_out[i]);
         end
          
     endgenerate

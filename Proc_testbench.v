@@ -25,10 +25,7 @@ module Proc_testbench();
     reg clk;
     reg reset;
     reg [31:0] ir;
-    wire [31:0] a_out;
-    wire [31:0] b_out;
-    wire [31:0] w_out;
-    Proc test(clk, reset, ir, a_out, b_out, w_out);
+    Proc test(clk, reset, ir);
     
     always #1 clk = ~clk;
         
@@ -43,6 +40,7 @@ module Proc_testbench();
         ir = 32'b000000000101_00000_000_00001_0010011;
         #2
         
+        /*
         //ADDI REG0, 2 -> REG2
         reset = 1'b0;
         ir = 32'b000000000010_00000_000_00010_0010011;
@@ -81,6 +79,7 @@ module Proc_testbench();
         //JUMP 4000, REG1
         ir = 32'b0_1111010000_1_0000000_00000_1101111;
         #2
+        */
         
         $finish;
     end
