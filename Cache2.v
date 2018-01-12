@@ -62,7 +62,7 @@ reg [127:0]data_block;  // check whether needed
 wire hit0;
 wire hit1;
 wire hit;
-reg read_hold;
+
 
 wire usedbit0;
 wire usedbit1;
@@ -137,13 +137,14 @@ begin
           begin  
                case (state)
                     IDLE :  begin 
-                            addr_latch <= Addr_CPU;
-                            Stall_PC <= 'd0;
+                            
+                            Stall_PC = 'd0;
                             Addr_Mem <= 'd0;
                             read_Mem <= 'd0;
                             write_Mem <= 'd0;
                             write_block <= 128'd0;
-                            read_hold='d0;
+                            
+ 
                             
                             hit_buf <= 'd0;
                             
@@ -151,13 +152,14 @@ begin
                              
                             if (read_CPU)
                                begin
-                               read_hold='d1;
+                               addr_latch <= Addr_CPU;
                                state <= READ;
                                state_cycle<= ~state_cycle;
                                readnotwrite= 'd1;
                                end
                             else if ( write_CPU)
                                begin
+                               addr_latch <= Addr_CPU;
                                state <= WRITE;
                                state_cycle<= ~state_cycle;
                                data_latch <= Data_CPU_write; 
@@ -564,12 +566,12 @@ begin
                                  addr_latch = buffer_addr[head];
                                  if(hit0)
                                    begin
-                                   data_cache0[addr_latch[4]][((addr_latch[1:0])*32)+:32] = buffer_data[head];
+                                   data_cache0[addr_latch[4]][((addr_latch[3:2])*32)+:32] = buffer_data[head];
                                    tag0[addr_latch[4]][29:28]<= 2'b11;                                     // dirty bit and valid bit set
                                    end
                                  else if (hit1)
                                    begin
-                                   data_cache1[addr_latch[4]][((addr_latch[1:0])*32)+:32] = buffer_data[head];
+                                   data_cache1[addr_latch[4]][((addr_latch[3:2])*32)+:32] = buffer_data[head];
                                    tag1[addr_latch[4]][29:28]<= 2'b11;                                     // dirty bit and valid bit set
                                    end       
                                  else
