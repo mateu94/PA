@@ -566,8 +566,8 @@ begin
                                  addr_latch = buffer_addr[head];
                                  if(hit0)
                                    begin
-                                   data_cache0[addr_latch[4]][((addr_latch[3:2])*32)+:32] = buffer_data[head];
-                                   tag0[addr_latch[4]][29:28]<= 2'b11;                                     // dirty bit and valid bit set
+                                    data_cache0[addr_latch[4]][((addr_latch[3:2])*32)+:32] = buffer_data[head];
+                                    tag0[addr_latch[4]][29:28]<= 2'b11;                                     // dirty bit and valid bit set
                                    end
                                  else if (hit1)
                                    begin

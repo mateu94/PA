@@ -66,6 +66,10 @@ module Decoder(
                     op_output_sign = op_funct7_sign;
                     y_sel_sign = 1'b1;
                     write_sign = 1'b1;
+                    read_mmu_sign = 1'b0;
+                    write_mmu_sign = 1'b0;
+                    load_instr_sign = 1'b0;
+                    branch_instr_sign = 1'b0;
                 end
             `I1: begin  //LDB, LDW
                     op_output_sign = op_funct3_sign;
@@ -74,6 +78,7 @@ module Decoder(
                     write_sign = 1'b1;
                     read_mmu_sign = 1'b1;
                     byte_select_mmu_sign = (op_funct3_sign == `LDB) ? 1 : 0;
+                    branch_instr_sign = 1'b0;
                     load_instr_sign = 1'b1;
                 end
             `I2: begin  //ADDI
@@ -81,26 +86,44 @@ module Decoder(
                     immed_sign = $signed(ir[31:20]);
                     y_sel_sign = 1'b0;
                     write_sign = 1'b1;
+                    read_mmu_sign = 1'b0;
+                    write_mmu_sign = 1'b0;
+                    branch_instr_sign = 1'b0;
+                    load_instr_sign = 1'b0;
                 end
             `S: begin   //STB, STW
                     immed_sign = $signed({ir[31:25], addr_d});
                     op_output_sign = op_funct3_sign;
+                    write_sign = 1'b0;
                     y_sel_sign = 1'b0;
+                    read_mmu_sign = 1'b0;
                     write_mmu_sign = 1'b1;
                     byte_select_mmu_sign = (op_funct3_sign == `STB) ? 1 : 0;
+                    branch_instr_sign = 1'b0;
+                    load_instr_sign = 1'b0;
                 end
             `B: begin   //BEW
                     immed_sign = $signed({ir[31], ir[7], ir[30:25], addr_d, 1'b0});
                     op_output_sign = op_funct3_sign;
+                    write_sign = 1'b0;
                     y_sel_sign = 1'b1;
+                    read_mmu_sign = 1'b0;
+                    write_mmu_sign = 1'b0;
                     branch_instr_sign = 1'b1;
+                    load_instr_sign = 1'b0;
                 end
             `J: begin   //JUMP
                     //Not sure right now how to decode this instruction
-                    //immed_sign = $signed({ir[31], ir[19:12], ir[20:20], ir[30:21], 1'b0});
+                    immed_sign = $signed({ir[31], ir[19:12], ir[20:20], ir[30:21], 1'b0});
                     op_output_sign = op_code;
-                    //y_sel_sign = 0;
+                    y_sel_sign = 0;
                     write_sign = 1'b1;
+                    y_sel_sign = 1'b0;
+                    read_mmu_sign = 1'b0;
+                    write_mmu_sign = 1'b0;
+                    branch_instr_sign = 1'b0;
+                    load_instr_sign = 1'b0;
+                    //jump_instr_sign = 1'b1;
                 end
             default: begin
                     immed_sign = `X32;
