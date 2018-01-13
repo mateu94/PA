@@ -39,6 +39,9 @@ module Decoder(
     output load_instr       //Indicate load instruction or not
     );
         
+    reg [4:0] addr_a_sign;
+    reg [4:0] addr_b_sign;
+    reg [4:0] addr_d_sign;
     reg [31:0] immed_sign;
     reg [13:0] op_output_sign;
     reg y_sel_sign;
@@ -53,14 +56,14 @@ module Decoder(
     wire [13:0] op_funct3_sign;
     wire [13:0] op_funct7_sign;
     
-    assign addr_a = ir[19:15];
-    assign addr_b = ir[24:20];
-    assign addr_d = ir[11:7];
     assign op_code = ir[6:0];
     assign op_funct3_sign = {ir[6:0], ir[14:12]};
     assign op_funct7_sign = {ir[6:0], ir[31:25]};   
     
     always @(ir) begin
+        addr_a_sign = ir[19:15];
+        addr_b_sign = ir[24:20];
+        addr_d_sign = ir[11:7];
         case (op_code)
             `R: begin   //ADD, SUB, MUL
                     op_output_sign = op_funct7_sign;
@@ -140,6 +143,9 @@ module Decoder(
         endcase
     end
     
+    assign addr_a = addr_a_sign;
+    assign addr_b = addr_b_sign;
+    assign addr_d = addr_d_sign;
     assign immed = immed_sign;
     assign op = op_output_sign;
     assign y_sel = y_sel_sign;

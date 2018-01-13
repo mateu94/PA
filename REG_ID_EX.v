@@ -16,7 +16,9 @@ module Reg_ID_EX(
     input [31:0] rgS2_data_in,
     input [31:0] immed_in,
     input y_sel_in,
-
+    
+    input [4:0] rgS1_index_in,
+    input [4:0] rgS2_index_in,
     input [4:0] rgD_index_in,
  
     output [31:0] next_pc_ID_EX_OUT,
@@ -27,6 +29,8 @@ module Reg_ID_EX(
     output y_sel_out,
 
     output [5:0] control_out,
+    output [4:0] rgS1_index_out,
+    output [4:0] rgS2_index_out,
     output [4:0] rgD_index_out 
 );
 
@@ -61,22 +65,33 @@ module Reg_ID_EX(
             FlipFlop r(clk, reset, rgS2_data_in[i], write_enable, rgS2_data_hold[i]);
         end
         
+        for(i=0; i<5; i = i+1) begin
+                FlipFlop r(clk, reset, rgS1_index_in[i], write_enable, rgS1_index_out[i]);
+        end
+        
+        for(i=0; i<5; i = i+1) begin
+                FlipFlop r(clk, reset, rgS2_index_in[i], write_enable, rgS2_index_out[i]);
+        end
+        
+        for(i=0; i<5; i = i+1) begin
+            FlipFlop r(clk, reset, rgD_index_in[i], write_enable, rgD_index_hold[i]);
+        end
+        
         for(i=0; i<32; i = i+1) begin
             FlipFlop r(clk, reset, immed_in[i], write_enable, immed_hold[i]);
         end
         
+        
+        
         FlipFlop r_ys(clk, reset, y_sel_in, write_enable, y_sel_hold);
               
-        FlipFlop r_c0(clk, reset, read_mmu, write_enable, control_hold[0]);    //Read from mem
-        FlipFlop r_c1(clk, reset, write_mmu, write_enable, control_hold[1]);   //Write to mem
-        FlipFlop r_c2(clk, reset, byte_select_mmu, write_enable, control_hold[2]); //Byte select for accessing mem
-        FlipFlop r_c3(clk, reset, write_reg, write_enable, control_hold[3]);   //Write to a reg
-        FlipFlop r_c4(clk, reset, br_ins, write_enable, control_hold[4]);   //Branch instruction or not
-        FlipFlop r_c5(clk, reset, ld_ins, write_enable, control_hold[5]);   //Load instruction or not
+        FlipFlop r_c0(clk, reset, read_mmu, write_enable, control_out[0]);    //Read from mem
+        FlipFlop r_c1(clk, reset, write_mmu, write_enable, control_out[1]);   //Write to mem
+        FlipFlop r_c2(clk, reset, byte_select_mmu, write_enable, control_out[2]); //Byte select for accessing mem
+        FlipFlop r_c3(clk, reset, write_reg, write_enable, control_out[3]);//_hold[3]);   //Write to a reg
+        FlipFlop r_c4(clk, reset, br_ins, write_enable, control_out[4]);   //Branch instruction or not
+        FlipFlop r_c5(clk, reset, ld_ins, write_enable, control_out[5]);   //Load instruction or not
               
-        for(i=0; i<5; i = i+1) begin
-            FlipFlop r(clk, reset, rgD_index_in[i], write_enable, rgD_index_hold[i]);
-        end
     endgenerate
         
     assign next_pc_ID_EX_OUT = next_pc_hold;
@@ -85,7 +100,7 @@ module Reg_ID_EX(
     assign rgS2_data_out = rgS2_data_hold;
     assign immed_out = immed_hold;
     assign y_sel_out = y_sel_hold;
-    assign control_out = control_hold;
+    //assign control_out = control_hold;
     assign rgD_index_out = rgD_index_hold;
    
 endmodule

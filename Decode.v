@@ -33,6 +33,8 @@ module Decode(
     output [31:0] b_out,    //Value REG SRC2
     output [31:0] immed,    //Value immediate
     output y_sel,           //Selector for reading src2 or offset
+    output [5:0] addr_a,    //REG addr of src1
+    output [5:0] addr_b,    //REG addr of src2
     output [4:0] addr_d_out,//REG addr that will be written
     
     output read_mmu,        //Indicate if the instruction reads from CACHE/MEM
@@ -43,10 +45,13 @@ module Decode(
     output load_instr    //Indicate load instruction or not
     ); 
         
-    wire [4:0] addr_a;
-    wire [4:0] addr_b;
+    wire [4:0] addr_a_sign;
+    wire [4:0] addr_b_sign;
         
-    Decoder dec(clk, ir, op, y_sel, addr_a, addr_b, addr_d_out, immed, read_mmu, write_mmu, byte_select_mmu, write_out, branch_instr, load_instr);
-    Registers_Bank registers(clk, reset, addr_a, addr_b, addr_d_in, d_in, write_in, a_out, b_out);
+    Decoder dec(clk, ir, op, y_sel, addr_a_sign, addr_b_sign, addr_d_out, immed, read_mmu, write_mmu, byte_select_mmu, write_out, branch_instr, load_instr);
+    Registers_Bank registers(clk, reset, addr_a_sign, addr_b_sign, addr_d_in, d_in, write_in, a_out, b_out);
+    
+    assign addr_a = addr_a_sign;
+    assign addr_b = addr_b_sign;
 
 endmodule

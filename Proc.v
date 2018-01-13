@@ -46,6 +46,10 @@ module Proc(
     
     //Connections in the processor
     wire write_enable;
+    wire write_enable_IF_ID;
+    wire write_enable_ID_EX;
+    wire write_enable_EX_M;
+    wire write_enable_M_WB;
     wire take_branch;
     
     //Connections between IF and ID stages    
@@ -70,6 +74,8 @@ module Proc(
     wire [31:0] rgS2_data_ID_EX_IN;
     wire [31:0] immed_ID_EX_IN;
     wire y_sel_ID_EX_IN;
+    wire [4:0] rgS1_index_ID_EX_IN;
+    wire [4:0] rgS2_index_ID_EX_IN;
     wire [4:0] rgD_index_ID_EX_IN;
     
         //OUTPUTS
@@ -81,6 +87,9 @@ module Proc(
     wire y_sel_ID_EX_OUT;
     wire [5:0] control_ID_EX_OUT;
     wire [31:0] ALU_S2_DATA;
+    wire [4:0] rgS1_index_ID_EX_OUT;
+    wire [4:0] rgS2_index_ID_EX_OUT;
+    wire [4:0] rgD_index_ID_EX_OUT;
     
     //Connections between EX and MEM stages
         //INPUTS
@@ -89,7 +98,6 @@ module Proc(
     wire [31:0] w_zero_EX_M_IN;
   //  wire [31:0] rgS2_data_ID_EX_OUT;
   //  wire [5:0] control_ID_EX_OUT;
-    wire [4:0] rgD_index_ID_EX_OUT;
     
         //OUTPUTS
     wire [31:0] w_out_EX_M_OUT;
@@ -118,31 +126,42 @@ module Proc(
    wire write_Mem;
    wire [31:0] Addr_Mem;
    wire [31:0] Data_Mem;
-   wire ready_mem; 
+   wire ready_mem;
+   
+   //Connections of Forwarding Unit
+        //INPUTS
+    
+        //OUTPUTS
+    wire [31:0] fwS1_data;
+    wire [31:0] fwS2_data;
 
 
     MainMem RAM(.clk(clk), .CS(CS), .OE(read_Mem), .WE(write_Mem), .Addr(Addr_Mem), .Data(Data_Mem), .Ready_Mem(ready_mem));
+    //Control_Unit(clk, reset, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_IN, stall_pc,
+                 //write_enable_IF_ID, write_enable_ID_EX, write_enable_EX_M, write_enable_M_WB);
+    Forwarding_Unit forw_unit(clk, reset, rgS1_index_ID_EX_OUT, rgS2_index_ID_EX_OUT, rgD_index_EX_M_OUT, rgD_index_M_WB_OUT, rgS1_data_ID_EX_OUT, rgS2_data_ID_EX_OUT, w_out_EX_M_OUT, rgD_data_in, control_EX_M_OUT[3], control_M_WB_OUT[0],
+                    fwS1_data, fwS2_data);
     
-    Reg_IF_ID IF_ID(clk, reset, write_enable, next_pc_IF_ID_IN, ir_IF_ID_IN,
+    Reg_IF_ID IF_ID(clk, reset, write_enable_IF_ID, next_pc_IF_ID_IN, ir_IF_ID_IN,
                     next_pc_IF_ID_OUT, ir_IF_ID_OUT);
     
-    Decode dec(clk, reset, ir, rgD_index_in, rgD_data_in, write_in, op_ID_EX_IN, rgS1_data_ID_EX_IN, rgS2_data_ID_EX_IN, immed_ID_EX_IN, y_sel_ID_EX_IN, rgD_index_ID_EX_IN, read_mmu_ID_EX_IN, write_mmu_ID_EX_IN, byte_select_mmu_ID_EX_IN, write_out_ID_EX_IN, br_ins_ID_EX_IN, ld_ins_ID_EX_IN);
+    Decode dec(clk, reset, ir, rgD_index_in, rgD_data_in, write_in, op_ID_EX_IN, rgS1_data_ID_EX_IN, rgS2_data_ID_EX_IN, immed_ID_EX_IN, y_sel_ID_EX_IN, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_IN, read_mmu_ID_EX_IN, write_mmu_ID_EX_IN, byte_select_mmu_ID_EX_IN, write_out_ID_EX_IN, br_ins_ID_EX_IN, ld_ins_ID_EX_IN);
     
-    Reg_ID_EX ID_EX(clk, reset, write_enable, next_pc_IF_ID_OUT, read_mmu_ID_EX_IN, write_mmu_ID_EX_IN, byte_select_mmu_ID_EX_IN, write_out_ID_EX_IN, br_ins_ID_EX_IN, ld_ins_ID_EX_IN, op_ID_EX_IN, rgS1_data_ID_EX_IN, rgS2_data_ID_EX_IN, immed_ID_EX_IN, y_sel_ID_EX_IN, rgD_index_ID_EX_IN,
-                    next_pc_ID_EX_OUT, op_ID_EX_OUT, rgS1_data_ID_EX_OUT, rgS2_data_ID_EX_OUT, immed_ID_EX_OUT, y_sel_ID_EX_OUT, control_ID_EX_OUT, rgD_index_ID_EX_OUT);
+    Reg_ID_EX ID_EX(clk, reset, write_enable_ID_EX, next_pc_IF_ID_OUT, read_mmu_ID_EX_IN, write_mmu_ID_EX_IN, byte_select_mmu_ID_EX_IN, write_out_ID_EX_IN, br_ins_ID_EX_IN, ld_ins_ID_EX_IN, op_ID_EX_IN, rgS1_data_ID_EX_IN, rgS2_data_ID_EX_IN, immed_ID_EX_IN, y_sel_ID_EX_IN, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_IN,
+                    next_pc_ID_EX_OUT, op_ID_EX_OUT, rgS1_data_ID_EX_OUT, rgS2_data_ID_EX_OUT, immed_ID_EX_OUT, y_sel_ID_EX_OUT, control_ID_EX_OUT, rgS1_index_ID_EX_OUT, rgS2_index_ID_EX_OUT, rgD_index_ID_EX_OUT);
 
-    assign ALU_S2_DATA = y_sel_ID_EX_OUT ? rgS2_data_ID_EX_OUT : immed_ID_EX_OUT;
+    assign ALU_S2_DATA = y_sel_ID_EX_OUT ? fwS2_data : immed_ID_EX_OUT;
     
-    ALU alu(op_ID_EX_OUT, rgS1_data_ID_EX_OUT, ALU_S2_DATA, next_pc_ID_EX_OUT, w_out_EX_M_IN, w_pc_EX_M_IN, w_zero_EX_M_IN);
+    ALU alu(op_ID_EX_OUT, fwS1_data, ALU_S2_DATA, next_pc_ID_EX_OUT, w_out_EX_M_IN, w_pc_EX_M_IN, w_zero_EX_M_IN);
     
-    Reg_EX_M EX_M(clk, reset, write_enable, w_out_EX_M_IN, w_pc_EX_M_IN, w_zero_EX_M_IN, rgS2_data_ID_EX_OUT, control_ID_EX_OUT, rgD_index_ID_EX_OUT,
+    Reg_EX_M EX_M(clk, reset, write_enable_EX_M, w_out_EX_M_IN, w_pc_EX_M_IN, w_zero_EX_M_IN, ALU_S2_DATA, control_ID_EX_OUT, rgD_index_ID_EX_OUT,
                  w_out_EX_M_OUT, w_pc_EX_M_OUT, w_zero_EX_M_OUT, rgS2_data_EX_M_OUT, control_EX_M_OUT, rgD_index_EX_M_OUT);
     
     //take_branch = (if_branch && zero)
     
     Cache2 Data_Cache(clk, reset, control_EX_M_OUT[0], control_EX_M_OUT[1], control_EX_M_OUT[2], rgS2_data_EX_M_OUT, Data_Load, w_out_EX_M_OUT, stall_pc, ready_mem, Data_Mem, Addr_Mem, read_Mem, write_Mem );    
     
-    Reg_M_WB M_WB(clk, reset, write_enable, Data_Load, w_out_EX_M_OUT, control_EX_M_OUT[3], control_EX_M_OUT[5], rgD_index_EX_M_OUT,
+    Reg_M_WB M_WB(clk, reset, write_enable_M_WB, Data_Load, w_out_EX_M_OUT, control_EX_M_OUT[3], control_EX_M_OUT[5], rgD_index_EX_M_OUT,
                   mem_data_out, w_out_M_WB_OUT, control_M_WB_OUT, rgD_index_M_WB_OUT);                
                       
     assign rgD_index_in = rgD_index_M_WB_OUT;
@@ -150,5 +169,9 @@ module Proc(
     assign write_in = control_M_WB_OUT[0];
     
     assign write_enable = !stall_pc;
+    assign write_enable_IF_ID = 1;
+    assign write_enable_ID_EX = 1;
+    assign write_enable_EX_M = 1;
+    assign write_enable_M_WB = 1;
     
 endmodule
