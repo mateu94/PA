@@ -63,6 +63,6 @@ module Reg_EX_M(
     assign ALU_zero_out = ALU_zero_hold;
     assign data_out = data_hold;
     assign control_out = control_hold;
-    assign rdD_index_out = rgD_index_hold;
+    assign rgD_index_out = rgD_index_hold;
    
 endmodule
