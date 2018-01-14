@@ -96,7 +96,7 @@ module Decoder(
                     load_instr_sign = 1'b0;
                 end
             `S: begin   //STB, STW
-                    immed_sign = $signed({ir[31:25], addr_d});
+                    immed_sign = $signed({ir[31:25], addr_d_sign});
                     op_output_sign = op_funct3_sign;
                     write_sign = 1'b0;
                     y_sel_sign = 1'b0;

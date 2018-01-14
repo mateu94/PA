@@ -52,6 +52,12 @@ module Proc(
     wire write_enable_M_WB;
     wire take_branch;
     
+    wire read_mmu;
+    wire write_mmu;
+    wire byte_select_mmu;
+    wire br_ins;
+    wire ld_ins;
+    
     //Connections between IF and ID stages    
             //INPUTS
     wire [31:0] next_pc_IF_ID_IN;
@@ -127,6 +133,7 @@ module Proc(
    wire [31:0] Addr_Mem;
    wire [31:0] Data_Mem;
    wire ready_mem;
+   assign CS = 1'b1;
    
    //Connections of Forwarding Unit
         //INPUTS
@@ -134,18 +141,35 @@ module Proc(
         //OUTPUTS
     wire [31:0] fwS1_data;
     wire [31:0] fwS2_data;
+    
+    //Connections of Hazard Unit
+        //INPUTS
+        
+        //OUTPUTS
+    wire HZ_U_stall;
 
 
     MainMem RAM(.clk(clk), .CS(CS), .OE(read_Mem), .WE(write_Mem), .Addr(Addr_Mem), .Data(Data_Mem), .Ready_Mem(ready_mem));
     //Control_Unit(clk, reset, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_IN, stall_pc,
                  //write_enable_IF_ID, write_enable_ID_EX, write_enable_EX_M, write_enable_M_WB);
+                 
+    Hazard_Unit hz_u(clk, reset, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_OUT, control_ID_EX_OUT[5],
+                HZ_U_stall);
+                 
     Forwarding_Unit forw_unit(clk, reset, rgS1_index_ID_EX_OUT, rgS2_index_ID_EX_OUT, rgD_index_EX_M_OUT, rgD_index_M_WB_OUT, rgS1_data_ID_EX_OUT, rgS2_data_ID_EX_OUT, w_out_EX_M_OUT, rgD_data_in, control_EX_M_OUT[3], control_M_WB_OUT[0],
                     fwS1_data, fwS2_data);
     
-    Reg_IF_ID IF_ID(clk, reset, write_enable_IF_ID, next_pc_IF_ID_IN, ir_IF_ID_IN,
+    Reg_IF_ID IF_ID(clk, reset, write_enable_IF_ID, next_pc_IF_ID_IN, ir,
                     next_pc_IF_ID_OUT, ir_IF_ID_OUT);
     
-    Decode dec(clk, reset, ir, rgD_index_in, rgD_data_in, write_in, op_ID_EX_IN, rgS1_data_ID_EX_IN, rgS2_data_ID_EX_IN, immed_ID_EX_IN, y_sel_ID_EX_IN, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_IN, read_mmu_ID_EX_IN, write_mmu_ID_EX_IN, byte_select_mmu_ID_EX_IN, write_out_ID_EX_IN, br_ins_ID_EX_IN, ld_ins_ID_EX_IN);
+    Decode dec(clk, reset, ir_IF_ID_OUT , rgD_index_in, rgD_data_in, write_in, op_ID_EX_IN, rgS1_data_ID_EX_IN, rgS2_data_ID_EX_IN, immed_ID_EX_IN, y_sel_ID_EX_IN, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_IN, read_mmu, write_mmu, byte_select_mmu, write_out, br_ins, ld_ins);
+    
+    assign read_mmu_ID_EX_IN = HZ_U_stall ? 0 : read_mmu;
+    assign write_mmu_ID_EX_IN = HZ_U_stall ? 0 : write_mmu;
+    assign byte_select_mmu_ID_EX_IN = HZ_U_stall ? 0 : byte_select_mmu;
+    assign write_out_ID_EX_IN = HZ_U_stall ? 0 : write_out;
+    assign br_ins_ID_EX_IN = HZ_U_stall ? 0 : br_ins;
+    assign ld_ins_ID_EX_IN = HZ_U_stall ? 0 : ld_ins;
     
     Reg_ID_EX ID_EX(clk, reset, write_enable_ID_EX, next_pc_IF_ID_OUT, read_mmu_ID_EX_IN, write_mmu_ID_EX_IN, byte_select_mmu_ID_EX_IN, write_out_ID_EX_IN, br_ins_ID_EX_IN, ld_ins_ID_EX_IN, op_ID_EX_IN, rgS1_data_ID_EX_IN, rgS2_data_ID_EX_IN, immed_ID_EX_IN, y_sel_ID_EX_IN, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_IN,
                     next_pc_ID_EX_OUT, op_ID_EX_OUT, rgS1_data_ID_EX_OUT, rgS2_data_ID_EX_OUT, immed_ID_EX_OUT, y_sel_ID_EX_OUT, control_ID_EX_OUT, rgS1_index_ID_EX_OUT, rgS2_index_ID_EX_OUT, rgD_index_ID_EX_OUT);
@@ -154,7 +178,7 @@ module Proc(
     
     ALU alu(op_ID_EX_OUT, fwS1_data, ALU_S2_DATA, next_pc_ID_EX_OUT, w_out_EX_M_IN, w_pc_EX_M_IN, w_zero_EX_M_IN);
     
-    Reg_EX_M EX_M(clk, reset, write_enable_EX_M, w_out_EX_M_IN, w_pc_EX_M_IN, w_zero_EX_M_IN, ALU_S2_DATA, control_ID_EX_OUT, rgD_index_ID_EX_OUT,
+    Reg_EX_M EX_M(clk, reset, write_enable_EX_M, w_out_EX_M_IN, w_pc_EX_M_IN, w_zero_EX_M_IN, fwS2_data, control_ID_EX_OUT, rgD_index_ID_EX_OUT,
                  w_out_EX_M_OUT, w_pc_EX_M_OUT, w_zero_EX_M_OUT, rgS2_data_EX_M_OUT, control_EX_M_OUT, rgD_index_EX_M_OUT);
     
     //take_branch = (if_branch && zero)
@@ -169,9 +193,9 @@ module Proc(
     assign write_in = control_M_WB_OUT[0];
     
     assign write_enable = !stall_pc;
-    assign write_enable_IF_ID = 1;
-    assign write_enable_ID_EX = 1;
-    assign write_enable_EX_M = 1;
-    assign write_enable_M_WB = 1;
+    assign write_enable_IF_ID = (!stall_pc &&  !HZ_U_stall);
+    assign write_enable_ID_EX = !stall_pc;
+    assign write_enable_EX_M = !stall_pc;
+    assign write_enable_M_WB = !stall_pc;
     
 endmodule

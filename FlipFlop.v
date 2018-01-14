@@ -28,16 +28,16 @@ module FlipFlop(
     output q
 );
 
-    reg q_out;
+    reg q;
     
     always @(negedge clk, posedge reset)
         begin
             if (reset == 1'b1)
-                q_out <= 1'b0;
+                q <= 1'b0;
             else if (write == 1'b1)
-                q_out <= data;
+                q <= data;
         end   
         
-    assign q = q_out;
+    //assign q = q_out;
     
 endmodule

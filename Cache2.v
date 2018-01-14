@@ -177,11 +177,11 @@ begin
                                end                           
                             end
                      
-                    READ:   begin #1
+                    READ:   begin 
                             // checking if buffer has data for this address
                             // first check if the buffer is empty, buffer empty if tail =10
                             if(tail!=10)
-                              begin #1
+                              begin 
                               state<=IDLE;
                               if(tail-head>=0)
                                  begin
@@ -252,7 +252,7 @@ begin
                                 end
                              end
 
-                     READMM: begin #1
+                     READMM: begin 
                               write_Mem <= 'd0; 
                               if(!waiting) 
                                  begin 
@@ -282,12 +282,12 @@ begin
                                    data_word= Data_Mem[((addr_latch[3:2])*32)+:32];
                                    end 
                              end      
-                     WAIT:   begin #1
+                     WAIT:   begin 
                              //We call this WAIT because memory will take 5 cycles to complete this
                              //give the Memory data to the CPU
                              //we need to check ready_mem again as when it comes from WRITE, we need to know that the write is done
                              read_Mem='d0;
-                              #1
+                              
                              
                              
                               
@@ -296,9 +296,9 @@ begin
                               //Note: We check if the block to be evicted has any new value in the buffer. If yes, we need to update the cache by flushing, before eviction 
                                if(tail-head>=0 && tail !=10 && sequential_control == 0)
                                  begin
-                                 #1
+                                 
                                  for(i=tail+1; i>=head+1; i=i-1)            // newer to older
-                                     begin #1
+                                     begin 
                                      if (buffer_addr[i-1]== addr_latch2)
                                         begin
                                         hit_buf[i-1]='d1;
@@ -342,14 +342,14 @@ begin
                                   end
                              //Update Cache
                              if(hit_BUF && (sequential_control==1))
-                                begin #1
+                                begin 
                                 //FLUSH!!!!!
                                 Stall_PC='d1;
                                 addr_latch1=addr_latch;
                                 if(tail-head>=0)
                                   begin          
                                   for(i=head+1;i<=tail+1;i=i+1)
-                                      begin #1
+                                      begin 
                                       addr_latch=buffer_addr[i-1];
                                       if(hit0)
                                          begin
@@ -400,7 +400,7 @@ begin
                                 sequential_control='d2;
                                 end
                              else if (sequential_control==1)
-                                begin #1
+                                begin 
                                 sequential_control='d2;
                                 end
                             
@@ -456,7 +456,7 @@ begin
                                    end                              
                             
                              end     
-                    WRITEMM: begin #1
+                    WRITEMM: begin 
                               read_Mem <= 'd0; 
                               write_Mem<='d0;
                                  
@@ -471,7 +471,7 @@ begin
                                  
                              end
                              
-                     WRITE: begin #1
+                     WRITE: begin 
                            
                               if(head-tail==1 || tail-head==7)
                                 begin
@@ -530,7 +530,7 @@ begin
                                 addr_latch=addr_latch1;
                                 head='d0;
                                 tail='d10;
-                                #1
+                                
                                 Stall_PC='d0;
                                 end  
                               if(tail==10)
@@ -562,7 +562,7 @@ begin
                             end 
 
 
-                     IDLE_WRITE: begin #1
+                     IDLE_WRITE: begin 
                                  addr_latch = buffer_addr[head];
                                  if(hit0)
                                    begin
