@@ -51,6 +51,8 @@ module Proc(
     wire write_enable_EX_M;
     wire write_enable_M_WB;
     wire take_branch;
+
+    wire stall_pc;
     
     wire read_mmu;
     wire write_mmu;
@@ -127,13 +129,7 @@ module Proc(
     wire [4:0] rgD_index_in;
     wire write_in;
     
-   //Connections between MainMem and Cache2
-   wire read_Mem;
-   wire write_Mem;
-   wire [31:0] Addr_Mem;
-   wire [31:0] Data_Mem;
-   wire ready_mem;
-   assign CS = 1'b1;
+   
    
    //Connections of Forwarding Unit
         //INPUTS
@@ -148,11 +144,56 @@ module Proc(
         //OUTPUTS
     wire HZ_U_stall;
 
+  //Connections between MainMem and Cache_Controller
+   wire read_Mem;
+   wire write_Mem;
+   wire [31:0] Addr_Mem;
+   wire [31:0] Data_Mem;
+   wire ready_mem; 
+
+   //Connections between Instr_Cache and Cache_Controller
+   wire read_Mem_instr;
+   wire write_Mem_instr;
+   wire [31:0] Addr_Mem_instr;
+   wire [31:0] Data_Mem_instr;
+   wire ready_mem_instr; 
+
+   //Connections between Data_Cache and Cache_Controller
+   wire read_Mem_data;
+   wire write_Mem_data;
+   wire [31:0] Addr_Mem_data;
+   wire [31:0] Data_Mem_data;
+   wire ready_mem_data; 
+
+   // Instr_cache signals 
+   wire read_instr;
+   assign read_instr = 1'b1;       
+   wire write_instr;
+   assign write_instr = 1'b0;
+   wire bytesel_instr;
+   assign bytesel_instr = 1'b0;
+   wire [31:0] data_write_instr;
+   assign data_write_instr = 32'd0;
+   wire [31:0] data_read_instr;
+   wire [31:0] PC;
+   wire stall_pc_instr;
+
+   // Data_cache signals 
+   wire stall_pc_data;
+
+   // MainMemory signals
+   wire CS;
+   assign CS= 1'b1;
 
     MainMem RAM(.clk(clk), .CS(CS), .OE(read_Mem), .WE(write_Mem), .Addr(Addr_Mem), .Data(Data_Mem), .Ready_Mem(ready_mem));
-    //Control_Unit(clk, reset, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_IN, stall_pc,
-                 //write_enable_IF_ID, write_enable_ID_EX, write_enable_EX_M, write_enable_M_WB);
-                 
+    Cache2 Data_Cache(clk, reset, control_EX_M_OUT[0], control_EX_M_OUT[1], control_EX_M_OUT[2], rgS2_data_EX_M_OUT, Data_Load, w_out_EX_M_OUT, stall_pc_data, ready_mem_data, Data_Mem_data, Addr_Mem_data, read_Mem_data, write_Mem_data );    
+
+    Cache2 Instr_Cache(clk, reset,read_instr, write_instr, bytesel_instr, data_write_instr, data_read_instr, PC, stall_pc_instr, ready_mem_instr, Data_Mem_instr, Addr_Mem_instr, read_Mem_instr, write_Mem_instr );    
+    Cache_Controller(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr, Addr_Mem_data, Data_Mem_data, Addr_Mem_instr, Data_Mem_instr, ready_mem,
+                      read_Mem, write_Mem, Addr_Mem, Data_Mem, ready_mem_data, ready_mem_instr);
+ 
+ 
+   
     Hazard_Unit hz_u(clk, reset, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_OUT, control_ID_EX_OUT[5],
                 HZ_U_stall);
                  
@@ -183,14 +224,15 @@ module Proc(
     
     //take_branch = (if_branch && zero)
     
-    Cache2 Data_Cache(clk, reset, control_EX_M_OUT[0], control_EX_M_OUT[1], control_EX_M_OUT[2], rgS2_data_EX_M_OUT, Data_Load, w_out_EX_M_OUT, stall_pc, ready_mem, Data_Mem, Addr_Mem, read_Mem, write_Mem );    
-    
+      
     Reg_M_WB M_WB(clk, reset, write_enable_M_WB, Data_Load, w_out_EX_M_OUT, control_EX_M_OUT[3], control_EX_M_OUT[5], rgD_index_EX_M_OUT,
                   mem_data_out, w_out_M_WB_OUT, control_M_WB_OUT, rgD_index_M_WB_OUT);                
                       
     assign rgD_index_in = rgD_index_M_WB_OUT;
     assign rgD_data_in = control_M_WB_OUT[1] ? mem_data_out : w_out_M_WB_OUT;
     assign write_in = control_M_WB_OUT[0];
+
+    assign stall_pc = (stall_pc_data || stall_pc_instr);
     
     assign write_enable = !stall_pc;
     assign write_enable_IF_ID = (!stall_pc &&  !HZ_U_stall);
@@ -199,3 +241,4 @@ module Proc(
     assign write_enable_M_WB = !stall_pc;
     
 endmodule
+
