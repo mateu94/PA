@@ -15,7 +15,7 @@ reg next_PC_hold;
 
 initial
 begin
-PC_hold = 32'd0;
+PC_hold = 32'd996;
 next_PC_hold = 32'd0;
 end
 

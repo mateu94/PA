@@ -38,13 +38,14 @@ read_hold='d0;
 write_hold='d0;
 
 //memory initialisation
-  file_code = $fopen("code.bin") ;
-  $readmemh("code.bin", Mem, 1000, 2) ;
+  file_code = $fopen("code.txt") ;
+  $readmemb("code.bin", Mem, 1000, 1) ;
   $fclose(file_code) ;
-
-  file_data = $fopen("data.bin") ;
-  $readmemh("data.bin", Mem, 10000, 2) ;
+/*
+  file_data = $fopen("data.txt") ;
+  $readmemb("data.bin", Mem, 10000, 2) ;
   $fclose(file_data) ;
+*/
 
 end
  always @ (posedge clk && count ==2)
