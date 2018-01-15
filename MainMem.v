@@ -1,4 +1,5 @@
-//This is the RAM Chip with 32 address lines
+`timescale 1ns / 1ps
+//This is the RAM Chip with 25 address lines
 
 
 
@@ -20,6 +21,8 @@ parameter RamDepth =  1<<Addr_Width;
   reg [2:0] count;
   reg read_hold;
   reg write_hold;
+  integer file_code;
+  integer file_data;
 
 // When read. In all other situations 
 //(even at chip select = 0) Data has high impedence
@@ -28,10 +31,22 @@ assign Data = (CS && read_hold && ! WE ) ? Data_out : 128'bz;
  // Write Operation : When WE = 1, CS = 1
 initial
 begin
+// signal initialisation
 count <= 'd2;
 Ready_Mem='b1;
 read_hold='d0;
 write_hold='d0;
+
+//memory initialisation
+  file_code = $fopen("code.txt") ;
+  $readmemb("code.bin", Mem, 1000, 1) ;
+  $fclose(file_code) ;
+/*
+  file_data = $fopen("data.txt") ;
+  $readmemb("data.bin", Mem, 10000, 2) ;
+  $fclose(file_data) ;
+*/
+
 end
  always @ (posedge clk && count ==2)
  begin
@@ -75,3 +90,4 @@ always @ (posedge clk && count!=2)
  end
 
 endmodule 
+

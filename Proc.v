@@ -175,7 +175,6 @@ module Proc(
    wire [31:0] data_write_instr;
    assign data_write_instr = 32'd0;
    wire [31:0] data_read_instr;
-   wire [31:0] PC;
    wire stall_pc_instr;
 
    // Data_cache signals 
@@ -185,14 +184,20 @@ module Proc(
    wire CS;
    assign CS= 1'b1;
 
+   //PC increment
+    wire [31:0] PC;
+    wire [31:0] next_PC;
+
     MainMem RAM(.clk(clk), .CS(CS), .OE(read_Mem), .WE(write_Mem), .Addr(Addr_Mem), .Data(Data_Mem), .Ready_Mem(ready_mem));
+    
     Cache2 Data_Cache(clk, reset, control_EX_M_OUT[0], control_EX_M_OUT[1], control_EX_M_OUT[2], rgS2_data_EX_M_OUT, Data_Load, w_out_EX_M_OUT, stall_pc_data, ready_mem_data, Data_Mem_data, Addr_Mem_data, read_Mem_data, write_Mem_data );    
 
     Cache2 Instr_Cache(clk, reset,read_instr, write_instr, bytesel_instr, data_write_instr, data_read_instr, PC, stall_pc_instr, ready_mem_instr, Data_Mem_instr, Addr_Mem_instr, read_Mem_instr, write_Mem_instr );    
-    Cache_Controller(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr, Addr_Mem_data, Data_Mem_data, Addr_Mem_instr, Data_Mem_instr, ready_mem,
+    
+    Cache_Controller cache_controller(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr, Addr_Mem_data, Data_Mem_data, Addr_Mem_instr, Data_Mem_instr, ready_mem,
                       read_Mem, write_Mem, Addr_Mem, Data_Mem, ready_mem_data, ready_mem_instr);
- 
- 
+    
+    PC_Incrementer PC_incrementer(clk, reset, stall_pc, PC, next_PC); 
    
     Hazard_Unit hz_u(clk, reset, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_OUT, control_ID_EX_OUT[5],
                 HZ_U_stall);
@@ -200,7 +205,7 @@ module Proc(
     Forwarding_Unit forw_unit(clk, reset, rgS1_index_ID_EX_OUT, rgS2_index_ID_EX_OUT, rgD_index_EX_M_OUT, rgD_index_M_WB_OUT, rgS1_data_ID_EX_OUT, rgS2_data_ID_EX_OUT, w_out_EX_M_OUT, rgD_data_in, control_EX_M_OUT[3], control_M_WB_OUT[0],
                     fwS1_data, fwS2_data);
     
-    Reg_IF_ID IF_ID(clk, reset, write_enable_IF_ID, next_pc_IF_ID_IN, ir,
+    Reg_IF_ID IF_ID(clk, reset, write_enable_IF_ID, next_pc_IF_ID_IN, data_read_instr,
                     next_pc_IF_ID_OUT, ir_IF_ID_OUT);
     
     Decode dec(clk, reset, ir_IF_ID_OUT , rgD_index_in, rgD_data_in, write_in, op_ID_EX_IN, rgS1_data_ID_EX_IN, rgS2_data_ID_EX_IN, immed_ID_EX_IN, y_sel_ID_EX_IN, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_IN, read_mmu, write_mmu, byte_select_mmu, write_out, br_ins, ld_ins);
