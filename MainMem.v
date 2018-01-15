@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 //This is the RAM Chip with 25 address lines
 
 
