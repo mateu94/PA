@@ -258,8 +258,8 @@ begin
                                  begin 
                                  if(ready_mem)
                                     begin 
-                                    read_Mem <= 'd1;
-                                    Addr_Mem= addr_latch;
+                                    read_Mem <= 'd1;                                   
+                                    Addr_Mem <={addr_latch [31:4],4'b0000}; 
                                     waiting= 'd1;
                                     // state_cycle<= ~state_cycle;
                                     end
@@ -599,4 +599,5 @@ begin
           end
 end
 endmodule
+
 
