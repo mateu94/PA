@@ -194,10 +194,10 @@ module Proc(
 
     Cache2 Instr_Cache(clk, reset,read_instr, write_instr, bytesel_instr, data_write_instr, data_read_instr, PC, stall_pc_instr, ready_mem_instr, Data_Mem_instr, Addr_Mem_instr, read_Mem_instr, write_Mem_instr );    
     
-    Cache_Controller(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr, Addr_Mem_data, Data_Mem_data, Addr_Mem_instr, Data_Mem_instr, ready_mem,
+    Cache_Controller cache_controller(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr, Addr_Mem_data, Data_Mem_data, Addr_Mem_instr, Data_Mem_instr, ready_mem,
                       read_Mem, write_Mem, Addr_Mem, Data_Mem, ready_mem_data, ready_mem_instr);
     
-    PC_Incrementer(clk, reset, stall_pc, PC, next_PC); 
+    PC_Incrementer PC_incrementer(clk, reset, stall_pc, PC, next_PC); 
    
     Hazard_Unit hz_u(clk, reset, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_OUT, control_ID_EX_OUT[5],
                 HZ_U_stall);
