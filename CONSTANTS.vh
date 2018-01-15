@@ -17,6 +17,7 @@
 `define STW 14'h11A
 `define MOV 14'h13  //REVISE
 `define BEQ 14'h318
+`define BNE 14'h319
 `define JUMP 14'h6F
 `define TLBWRITE 14'hXX //REVISE
 `define IRET 14'hXX //REVISE
