@@ -103,17 +103,19 @@ module Proc(
         //INPUTS
     wire [31:0] w_out_EX_M_IN;
     wire [31:0] w_pc_EX_M_IN;
-    wire [31:0] w_zero_EX_M_IN;
+    wire [31:0] w_take_branch_EX_M_IN;
   //  wire [31:0] rgS2_data_ID_EX_OUT;
   //  wire [5:0] control_ID_EX_OUT;
+    wire [31:0] immed_sl2;
     
         //OUTPUTS
     wire [31:0] w_out_EX_M_OUT;
     wire [31:0] w_pc_EX_M_OUT;
-    wire [31:0] w_zero_EX_M_OUT;
+    wire [31:0] w_take_branch_EX_M_OUT;
     wire [31:0] rgS2_data_EX_M_OUT;
     wire [5:0] control_EX_M_OUT;
     wire [4:0] rgD_index_EX_M_OUT;
+    wire PCSrc;
     
     //Connection between M and WB stages
         //INPUTS
@@ -197,7 +199,7 @@ module Proc(
     Cache_Controller cache_controller(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr, Addr_Mem_data, Data_Mem_data, Addr_Mem_instr, Data_Mem_instr, ready_mem,
                       read_Mem, write_Mem, Addr_Mem, Data_Mem, ready_mem_data, ready_mem_instr);
     
-    PC_Incrementer PC_incrementer(clk, reset, stall_pc, PC, next_PC); 
+    PC_Incrementer PC_incrementer(clk, reset, stall_pc, PCSrc, w_pc_EX_M_OUT, PC, next_PC); 
    
     Hazard_Unit hz_u(clk, reset, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_OUT, control_ID_EX_OUT[5],
                 HZ_U_stall);
@@ -221,13 +223,14 @@ module Proc(
                     next_pc_ID_EX_OUT, op_ID_EX_OUT, rgS1_data_ID_EX_OUT, rgS2_data_ID_EX_OUT, immed_ID_EX_OUT, y_sel_ID_EX_OUT, control_ID_EX_OUT, rgS1_index_ID_EX_OUT, rgS2_index_ID_EX_OUT, rgD_index_ID_EX_OUT);
 
     assign ALU_S2_DATA = y_sel_ID_EX_OUT ? fwS2_data : immed_ID_EX_OUT;
+    assign immed_sl2 = immed_ID_EX_OUT << 2;
     
-    ALU alu(op_ID_EX_OUT, fwS1_data, ALU_S2_DATA, next_pc_ID_EX_OUT, w_out_EX_M_IN, w_pc_EX_M_IN, w_zero_EX_M_IN);
+    ALU alu(op_ID_EX_OUT, fwS1_data, ALU_S2_DATA, immed_sl2, next_pc_ID_EX_OUT, w_out_EX_M_IN, w_pc_EX_M_IN, w_take_branch_EX_M_IN);
     
-    Reg_EX_M EX_M(clk, reset, write_enable_EX_M, w_out_EX_M_IN, w_pc_EX_M_IN, w_zero_EX_M_IN, fwS2_data, control_ID_EX_OUT, rgD_index_ID_EX_OUT,
-                 w_out_EX_M_OUT, w_pc_EX_M_OUT, w_zero_EX_M_OUT, rgS2_data_EX_M_OUT, control_EX_M_OUT, rgD_index_EX_M_OUT);
+    Reg_EX_M EX_M(clk, reset, write_enable_EX_M, w_out_EX_M_IN, w_pc_EX_M_IN, w_take_branch_EX_M_IN, fwS2_data, control_ID_EX_OUT, rgD_index_ID_EX_OUT,
+                 w_out_EX_M_OUT, w_pc_EX_M_OUT, w_take_branch_EX_M_OUT, rgS2_data_EX_M_OUT, control_EX_M_OUT, rgD_index_EX_M_OUT);
     
-    //take_branch = (if_branch && zero)
+    assign PCSrc = (w_take_branch_EX_M_OUT && control_EX_M_OUT[4]) ? 1 : 0;
     
       
     Reg_M_WB M_WB(clk, reset, write_enable_M_WB, Data_Load, w_out_EX_M_OUT, control_EX_M_OUT[3], control_EX_M_OUT[5], rgD_index_EX_M_OUT,
