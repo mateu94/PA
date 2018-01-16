@@ -5,16 +5,16 @@ input write_Mem_data,
 input read_Mem_instr,
 input write_Mem_instr,
 input [31:0] Addr_Mem_data,
-inout [31:0] Data_Mem_data,
+inout [127:0] Data_Mem_data,
 input [31:0] Addr_Mem_instr,
-inout [31:0] Data_Mem_instr,
+inout [127:0] Data_Mem_instr,
 
 input ready_mem,
 
 output read_Mem,
 output write_Mem,
 output [31:0] Addr_Mem,
-inout [31:0] Data_Mem,
+inout [127:0] Data_Mem,
 
 output ready_mem_data,
 output ready_mem_instr 
@@ -28,9 +28,9 @@ reg [31:0] Data_Mem_hold;
 reg ready_mem_data_hold;
 reg ready_mem_instr_hold;
 
-assign Data_Mem = (write_Mem_data || write_Mem_instr)? (write_Mem_data? Data_Mem_data: Data_Mem_instr) : 32'dz;
-assign Data_Mem_data = read_Mem_data? Data_Mem  : 32'dz;
-assign Data_Mem_instr = read_Mem_instr? Data_Mem  : 32'dz;
+assign Data_Mem = (write_Mem_data || write_Mem_instr)? (write_Mem_data? Data_Mem_data: Data_Mem_instr) : 128'dz;
+assign Data_Mem_data = read_Mem_data? Data_Mem  : 128'dz;
+assign Data_Mem_instr = read_Mem_instr? Data_Mem  : 128'dz;
 
 initial
 begin
@@ -52,6 +52,11 @@ else if(read_Mem_instr || write_Mem_instr)
    write_Mem_hold = write_Mem_instr;
    Addr_Mem_hold = Addr_Mem_instr;
    end
+else
+   begin
+   read_Mem_hold = 1'b0;
+   write_Mem_hold = 1'b0;
+   end
 end 
 
 always @(ready_mem)
@@ -62,6 +67,11 @@ ready_mem_data_hold= ready_mem;
 end
 else if (read_Mem_instr || write_Mem_instr)
 begin
+ready_mem_instr_hold= ready_mem;
+end
+else
+begin
+ready_mem_data_hold= ready_mem;
 ready_mem_instr_hold= ready_mem;
 end
 end
