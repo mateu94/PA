@@ -130,9 +130,9 @@ module Decoder(
                     //jump_instr_sign = 1'b1;
                 end
             default: begin
-                    immed_sign = `X32;
-                    op_output_sign = `X32;
-                    y_sel_sign = 1'bX;
+                    immed_sign = 31'h00000000;
+                    op_output_sign = 31'h00000000;
+                    y_sel_sign = 1'b0;
                     read_mmu_sign = 1'b0;
                     write_mmu_sign = 1'b0;
                     byte_select_mmu_sign = 1'b0;

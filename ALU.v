@@ -24,32 +24,41 @@ module ALU(
     input [13:0] op,
     input [31:0] x,
     input [31:0] y,
+    input [31:0] immed_sl2,
     input [31:0] pc,
     output [31:0] w,
     output [31:0] w_pc,
-    output zero
+    output take_branch
 );
 
-    reg [31:0] w_out;
+    reg [31:0] w_sign;
+    reg [31:0] w_pc_sign;
+    reg take_branch_sign;
            
     always @(*) begin
+        w_pc_sign = pc + immed_sl2;
+        take_branch_sign <= 1'b0;
         case (op)
-            `ADD : w_out <= x + y;
-            `ADDI : w_out <= x + y;
-            `SUB : w_out <= x - y;
-            `MUL : w_out <= x * y;
-            `LDB : w_out <= x + y;
-            `LDW : w_out <= x + y;
-            `STB : w_out <= x + y;
-            `STW : w_out <= x + y;
+            `ADD : w_sign <= x + y;
+            `ADDI : w_sign <= x + y;
+            `SUB : w_sign <= x - y;
+            `MUL : w_sign <= x * y;
+            `LDB : w_sign <= x + y;
+            `LDW : w_sign <= x + y;
+            `STB : w_sign <= x + y;
+            `STW : w_sign <= x + y;
             `MOV : ;
-            `BEQ : w_out <= (x == y);
+            `BEQ : take_branch_sign <= (x == y);
+            `BNE : take_branch_sign <= (x != y);
             `JUMP : ;
             `TLBWRITE : ;
             `IRET : ;
-            default: w_out <= `X32;
+            default: w_sign <= `X32;
         endcase
     end
        
-   assign w = w_out;
+    assign w = w_sign;
+    assign w_pc = w_pc_sign;
+    assign take_branch = take_branch_sign;
+
 endmodule
