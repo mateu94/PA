@@ -209,15 +209,19 @@ module Proc(
     
     Reg_IF_ID IF_ID(clk, reset, write_enable_IF_ID, next_pc_IF_ID_IN, data_read_instr,
                     next_pc_IF_ID_OUT, ir_IF_ID_OUT);
+                    
+    // Multiplexor in case there is a taken branch
+    assign ir_IF_ID_OUT = (w_take_branch_EX_M_OUT) ? 32'h00000000 : ir_IF_ID_OUT;
     
     Decode dec(clk, reset, ir_IF_ID_OUT , rgD_index_in, rgD_data_in, write_in, op_ID_EX_IN, rgS1_data_ID_EX_IN, rgS2_data_ID_EX_IN, immed_ID_EX_IN, y_sel_ID_EX_IN, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_IN, read_mmu, write_mmu, byte_select_mmu, write_out, br_ins, ld_ins);
     
-    assign read_mmu_ID_EX_IN = HZ_U_stall ? 0 : read_mmu;
-    assign write_mmu_ID_EX_IN = HZ_U_stall ? 0 : write_mmu;
-    assign byte_select_mmu_ID_EX_IN = HZ_U_stall ? 0 : byte_select_mmu;
-    assign write_out_ID_EX_IN = HZ_U_stall ? 0 : write_out;
-    assign br_ins_ID_EX_IN = HZ_U_stall ? 0 : br_ins;
-    assign ld_ins_ID_EX_IN = HZ_U_stall ? 0 : ld_ins;
+    // Multiplexor in case there is a hazard stall or a taken branch
+    assign read_mmu_ID_EX_IN = (HZ_U_stall || w_take_branch_EX_M_OUT) ? 0 : read_mmu;
+    assign write_mmu_ID_EX_IN = (HZ_U_stall || w_take_branch_EX_M_OUT) ? 0 : write_mmu;
+    assign byte_select_mmu_ID_EX_IN = (HZ_U_stall || w_take_branch_EX_M_OUT) ? 0 : byte_select_mmu;
+    assign write_out_ID_EX_IN = (HZ_U_stall || w_take_branch_EX_M_OUT) ? 0 : write_out;
+    assign br_ins_ID_EX_IN = (HZ_U_stall || w_take_branch_EX_M_OUT) ? 0 : br_ins;
+    assign ld_ins_ID_EX_IN = (HZ_U_stall || w_take_branch_EX_M_OUT) ? 0 : ld_ins;
     
     Reg_ID_EX ID_EX(clk, reset, write_enable_ID_EX, next_pc_IF_ID_OUT, read_mmu_ID_EX_IN, write_mmu_ID_EX_IN, byte_select_mmu_ID_EX_IN, write_out_ID_EX_IN, br_ins_ID_EX_IN, ld_ins_ID_EX_IN, op_ID_EX_IN, rgS1_data_ID_EX_IN, rgS2_data_ID_EX_IN, immed_ID_EX_IN, y_sel_ID_EX_IN, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_IN,
                     next_pc_ID_EX_OUT, op_ID_EX_OUT, rgS1_data_ID_EX_OUT, rgS2_data_ID_EX_OUT, immed_ID_EX_OUT, y_sel_ID_EX_OUT, control_ID_EX_OUT, rgS1_index_ID_EX_OUT, rgS2_index_ID_EX_OUT, rgD_index_ID_EX_OUT);
@@ -226,6 +230,14 @@ module Proc(
     assign immed_sl2 = immed_ID_EX_OUT << 2;
     
     ALU alu(op_ID_EX_OUT, fwS1_data, ALU_S2_DATA, immed_sl2, next_pc_ID_EX_OUT, w_out_EX_M_IN, w_pc_EX_M_IN, w_take_branch_EX_M_IN);
+    
+    // Multiplexor in case there is a taken branch
+    assign control_ID_EX_OUT[0] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[0];
+    assign control_ID_EX_OUT[1] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[1];
+    assign control_ID_EX_OUT[2] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[2];
+    assign control_ID_EX_OUT[3] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[3];
+    assign control_ID_EX_OUT[4] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[4];
+    assign control_ID_EX_OUT[5] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[5];
     
     Reg_EX_M EX_M(clk, reset, write_enable_EX_M, w_out_EX_M_IN, w_pc_EX_M_IN, w_take_branch_EX_M_IN, fwS2_data, control_ID_EX_OUT, rgD_index_ID_EX_OUT,
                  w_out_EX_M_OUT, w_pc_EX_M_OUT, w_take_branch_EX_M_OUT, rgS2_data_EX_M_OUT, control_EX_M_OUT, rgD_index_EX_M_OUT);
