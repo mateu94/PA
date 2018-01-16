@@ -31,7 +31,12 @@ reg ready_mem_instr_hold;
 assign Data_Mem = (write_Mem_data || write_Mem_instr)? (write_Mem_data? Data_Mem_data: Data_Mem_instr) : 32'dz;
 assign Data_Mem_data = read_Mem_data? Data_Mem  : 32'dz;
 assign Data_Mem_instr = read_Mem_instr? Data_Mem  : 32'dz;
- 
+
+initial
+begin
+ready_mem_data_hold = 1'b1;
+ready_mem_instr_hold = 1'b1;
+end 
 
 always@(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr)
 begin
@@ -67,7 +72,7 @@ assign Addr_Mem = Addr_Mem_hold;
 assign Data_Mem = Data_Mem_hold;
 
 assign ready_mem_data = ready_mem_data_hold;
-assign ready_instr_data = ready_mem_instr_hold;
+assign ready_mem_instr = ready_mem_instr_hold;
 
 
 endmodule

@@ -10,8 +10,8 @@ module PC_Incrementer
          output [31:0] next_PC                  
          );
 
-reg PC_hold;
-reg next_PC_hold;
+reg [31:0] PC_hold;
+reg [31:0] next_PC_hold;
 
 initial
 begin

@@ -22,8 +22,8 @@
 
 module Proc(
     input clk,
-    input reset,
-    input [31:0] ir
+    input reset //,
+ //   input [31:0] ir
     /*
     input stall_pc,
     
