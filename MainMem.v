@@ -25,12 +25,17 @@ parameter RamDepth =  1<<Addr_Width;
   integer file_data;
 
 
-  reg [31:0] Memorytest [3:0];
+  reg [31:0] Memorytest [15:0];
 // When read. In all other situations 
 //(even at chip select = 0) Data has high impedence
 assign Data = (CS && read_hold && ! WE ) ? Data_out : 128'bz;
 //  Memory Write Block 
  // Write Operation : When WE = 1, CS = 1
+ initial
+ begin
+       $readmemb("data.dat", Memorytest) ;
+ end
+ 
 initial
 begin
 // signal initialisation
@@ -41,7 +46,8 @@ write_hold='d0;
 
 //memory initialisation
   //file_code = $fopen("data.txt") ;
-  $readmemb("data.txt", Memorytest) ;
+  $readmemb("data.dat", Mem) ;
+  //$fdisplay(file_code, "HOLA");
   //$fclose(file_code) ;
 /*
   file_data = $fopen("data.txt") ;

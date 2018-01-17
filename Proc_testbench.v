@@ -27,7 +27,11 @@ module Proc_testbench();
     //reg [31:0] ir;
     Proc test(clk, reset);
     
+    reg [15:0] Memorytest [31:0];
+    
     always #1 clk = ~clk;
+    
+    initial $readmemb("data.dat", Memorytest);
         
     initial 
     begin
@@ -38,6 +42,7 @@ module Proc_testbench();
         
         //ADDI REG0, 2 -> REG1
         reset = 1'b0;
+        #30
         /*ir = 32'b000000000010_00000_000_00001_0010011;
         #2
                 
