@@ -75,6 +75,7 @@ module Proc(
     wire byte_select_mmu_ID_EX_IN;
     wire br_ins_ID_EX_IN;
     wire ld_ins_ID_EX_IN;
+    wire [31:0] ir_DEC_IN;
     
     wire [13:0] op_ID_EX_IN;
     wire write_out_ID_EX_IN;
@@ -111,7 +112,7 @@ module Proc(
         //OUTPUTS
     wire [31:0] w_out_EX_M_OUT;
     wire [31:0] w_pc_EX_M_OUT;
-    wire [31:0] w_take_branch_EX_M_OUT;
+    wire w_take_branch_EX_M_OUT;
     wire [31:0] rgS2_data_EX_M_OUT;
     wire [5:0] control_EX_M_OUT;
     wire [4:0] rgD_index_EX_M_OUT;
@@ -150,21 +151,24 @@ module Proc(
    wire read_Mem;
    wire write_Mem;
    wire [31:0] Addr_Mem;
-   wire [31:0] Data_Mem;
+   wire [127:0] Data_Mem_read;
+   wire [127:0] Data_Mem_write;
    wire ready_mem; 
 
    //Connections between Instr_Cache and Cache_Controller
    wire read_Mem_instr;
    wire write_Mem_instr;
    wire [31:0] Addr_Mem_instr;
-   wire [31:0] Data_Mem_instr;
+   wire [127:0] Data_Mem_instr_read;
+   wire [127:0] Data_Mem_instr_write;
    wire ready_mem_instr; 
 
    //Connections between Data_Cache and Cache_Controller
    wire read_Mem_data;
    wire write_Mem_data;
    wire [31:0] Addr_Mem_data;
-   wire [31:0] Data_Mem_data;
+   wire [127:0] Data_Mem_data_read;
+   wire [127:0] Data_Mem_data_write;
    wire ready_mem_data; 
 
    // Instr_cache signals 
@@ -190,14 +194,14 @@ module Proc(
     wire [31:0] PC;
     wire [31:0] next_PC;
 
-    MainMem RAM(.clk(clk), .CS(CS), .OE(read_Mem), .WE(write_Mem), .Addr(Addr_Mem), .Data(Data_Mem), .Ready_Mem(ready_mem));
+    MainMem RAM(.clk(clk), .CS(CS), .OE(read_Mem), .WE(write_Mem), .Addr(Addr_Mem), .Data_in(Data_Mem_write), .Data_out(Data_Mem_read), .Ready_Mem(ready_mem));
     
-    Cache2 Data_Cache(clk, reset, control_EX_M_OUT[0], control_EX_M_OUT[1], control_EX_M_OUT[2], rgS2_data_EX_M_OUT, Data_Load, w_out_EX_M_OUT, stall_pc_data, ready_mem_data, Data_Mem_data, Addr_Mem_data, read_Mem_data, write_Mem_data );    
+    Cache2 Data_Cache(clk, reset, control_EX_M_OUT[0], control_EX_M_OUT[1], control_EX_M_OUT[2], rgS2_data_EX_M_OUT, Data_Load, w_out_EX_M_OUT, stall_pc_data, ready_mem_data, Data_Mem_data_read, Data_Mem_data_write, Addr_Mem_data, read_Mem_data, write_Mem_data );    
 
-    Cache2 Instr_Cache(clk, reset,read_instr, write_instr, bytesel_instr, data_write_instr, data_read_instr, PC, stall_pc_instr, ready_mem_instr, Data_Mem_instr, Addr_Mem_instr, read_Mem_instr, write_Mem_instr );    
+    Cache2 Instr_Cache(clk, reset,read_instr, write_instr, bytesel_instr, data_write_instr, data_read_instr, PC, stall_pc_instr, ready_mem_instr, Data_Mem_instr_read, Data_Mem_instr_write, Addr_Mem_instr, read_Mem_instr, write_Mem_instr );    
     
-    Cache_Controller cache_controller(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr, Addr_Mem_data, Data_Mem_data, Addr_Mem_instr, Data_Mem_instr, ready_mem,
-                      read_Mem, write_Mem, Addr_Mem, Data_Mem, ready_mem_data, ready_mem_instr);
+    Cache_Controller cache_controller(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr, Addr_Mem_data, Data_Mem_data_read, Data_Mem_data_write, Addr_Mem_instr, Data_Mem_instr_read, Data_Mem_instr_write, ready_mem,
+                      read_Mem, write_Mem, Addr_Mem, Data_Mem_read, Data_Mem_write, ready_mem_data, ready_mem_instr);
     
     PC_Incrementer PC_incrementer(clk, reset, stall_pc, PCSrc, w_pc_EX_M_OUT, PC, next_PC); 
    
@@ -211,9 +215,9 @@ module Proc(
                     next_pc_IF_ID_OUT, ir_IF_ID_OUT);
                     
     // Multiplexor in case there is a taken branch
-    assign ir_IF_ID_OUT = (w_take_branch_EX_M_OUT) ? 32'h00000000 : ir_IF_ID_OUT;
+    assign ir_DEC_IN = (w_take_branch_EX_M_OUT) ? 32'h00000000 : ir_IF_ID_OUT;
     
-    Decode dec(clk, reset, ir_IF_ID_OUT , rgD_index_in, rgD_data_in, write_in, op_ID_EX_IN, rgS1_data_ID_EX_IN, rgS2_data_ID_EX_IN, immed_ID_EX_IN, y_sel_ID_EX_IN, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_IN, read_mmu, write_mmu, byte_select_mmu, write_out, br_ins, ld_ins);
+    Decode dec(clk, reset, ir_DEC_IN , rgD_index_in, rgD_data_in, write_in, op_ID_EX_IN, rgS1_data_ID_EX_IN, rgS2_data_ID_EX_IN, immed_ID_EX_IN, y_sel_ID_EX_IN, rgS1_index_ID_EX_IN, rgS2_index_ID_EX_IN, rgD_index_ID_EX_IN, read_mmu, write_mmu, byte_select_mmu, write_out, br_ins, ld_ins);
     
     // Multiplexor in case there is a hazard stall or a taken branch
     assign read_mmu_ID_EX_IN = (HZ_U_stall || w_take_branch_EX_M_OUT) ? 0 : read_mmu;

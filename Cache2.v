@@ -26,7 +26,8 @@ module Cache2
         
          input ready_mem,
 
-         inout [(Word_Size*Block_Size)-1:0] Data_Mem,
+         input [(Word_Size*Block_Size)-1:0] Data_Mem_read,
+         output [(Word_Size*Block_Size)-1:0] Data_Mem_write,
          output reg [Word_Size-1:0] Addr_Mem,
          output reg read_Mem,
          output reg write_Mem            
@@ -92,7 +93,8 @@ assign usedbit0 = tag0[addr_latch[4]][27];    // '0' for recently used
 assign usedbit1 = tag1[addr_latch[4]][27];
 
 assign Data_CPU_read = (hit_BUF? (Bytesel?{24'b0,buffer_word[((addr_latch[1:0])*8)+:8]}: buffer_word ): (Bytesel?{24'b0,data_word[((addr_latch[1:0])*8)+:8]} : data_word)) ;  // PROBLEM !!!!!! Stall_PC=0 should not be immediately followed by a write. wait for one cycle
-assign Data_Mem = write_Mem ? write_block : 128'dZ;
+//assign Data_Mem = write_Mem ? write_block : 128'dZ;
+assign Data_Mem_write = write_block;
 
 assign addr_latch2= (!usedbit1)? ({tag0[addr_latch[4]][26:0],addr_latch[4:0]}): ({tag1[addr_latch[4]][26:0],addr_latch[4:0]});     //before eviction checking if cache value updated
 // Cache Controller 
@@ -279,7 +281,7 @@ begin
                                  end
                              if(from_read)
                                    begin
-                                   data_word= Data_Mem[((addr_latch[3:2])*32)+:32];
+                                   data_word= Data_Mem_read[((addr_latch[3:2])*32)+:32];
                                    end 
                              end      
                      WAIT:   begin 
@@ -423,10 +425,11 @@ begin
                                      end  
                                    else
                                      begin
+                                     Stall_PC = 'd0;
                                      state<= IDLE;
                                      end 
                                    tag0[addr_latch[4]] = {3'b010,addr_latch[31:5]};        // validbit set, usedbit made zero and rest of tag updated
-                                   data_cache0[addr_latch[4]] = Data_Mem;
+                                   data_cache0[addr_latch[4]] = Data_Mem_read;
                                    tag1[addr_latch[4]][27] = 'd1;                          // usedbit of tag1 made 1.
                                    end
                              else if (usedbit0 == 0 && (sequential_control==2 ))
@@ -448,10 +451,11 @@ begin
                                      end   
                                    else
                                      begin
+                                     Stall_PC = 'd0;
                                      state<= IDLE;
                                      end 
                                    tag1[addr_latch[4]] = {3'b010,addr_latch[31:5]};      // validbit set, usedbit made zero and rest of tag updated
-                                   data_cache1[addr_latch[4]] = Data_Mem; 
+                                   data_cache1[addr_latch[4]] = Data_Mem_read; 
                                    tag0[addr_latch[4]][27] = 'd1;                        // usedbit of tag0 made 1.
                                    end                              
                             
@@ -462,6 +466,7 @@ begin
                                  
                                  if(ready_mem)
                                    begin
+                                   Stall_PC = 'd0;
                                    state<=IDLE;
                                    end
                                  else
@@ -551,6 +556,7 @@ begin
                                                          
                             if(hit)
                               begin
+                              Stall_PC = 'd0;
                               state<= IDLE;
                               end
                             if(!hit)
@@ -592,6 +598,7 @@ begin
                                    begin
                                    head=head + 1;
                                    end
+                                 Stall_PC = 'd0;  
                                  state<=IDLE;
                                  state_cycle=~state_cycle;
                                  end 

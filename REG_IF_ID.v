@@ -13,6 +13,7 @@ module Reg_IF_ID(
 
     wire [31:0] PC_hold;
     wire [31:0] next_PC_hold;
+    wire [31:0] ir_hold;
 
     generate
         genvar i;              
@@ -21,12 +22,12 @@ module Reg_IF_ID(
         end
         
         for(i=0; i<32; i = i+1) begin
-            FlipFlop r(clk, reset, ir_in[i], write, ir_out[i]);
+            FlipFlop r(clk, reset, ir_in[i], write, ir_hold[i]);
         end
          
     endgenerate
             
-    assign PC_out = PC_hold;
     assign next_PC_out = next_PC_hold;
+    assign ir_out = ir_hold;
  
 endmodule
