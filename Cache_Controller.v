@@ -77,6 +77,13 @@ always@(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr)
        if(write_Mem_instr)
                 write_Mem_instr_hold=write_Mem_instr; 
        end
+    
+/*    else if(read_Mem_instr_hold)
+              begin
+              read_Mem_hold = read_Mem_instr_hold;           
+              Addr_Mem_hold = Addr_Mem_instr; 
+              end  */
+       
     else
        begin
        read_Mem_hold = 1'b0;
@@ -88,19 +95,49 @@ always@(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr)
 
 always @(ready_mem)
  begin
-    if(read_Mem_data_hold || write_Mem_data_hold)
+ if(!ready_mem)
+    begin
+    ready_mem_data_hold= ready_mem;
+    ready_mem_instr_hold= ready_mem;
+    end
+ else
+   begin  
+    if((read_Mem_data_hold || write_Mem_data_hold) && (read_Mem_instr_hold || write_Mem_instr_hold) )
         begin
         ready_mem_data_hold= ready_mem;
+        if(read_Mem_data_hold)
+                  read_Mem_data_hold= 1'b0;
+        if(write_Mem_data_hold)
+                  write_Mem_data_hold=1'b0;   
         end
     else if (read_Mem_instr_hold || write_Mem_instr_hold)
         begin
         ready_mem_instr_hold= ready_mem;
+        ready_mem_data_hold= ready_mem;
+
+        if(read_Mem_instr_hold)
+                        read_Mem_instr_hold=1'b0;
+        if(write_Mem_instr_hold)
+                        write_Mem_instr_hold=1'b0;   
         end
+        
+    else if (read_Mem_data_hold || write_Mem_data_hold)
+        begin
+        ready_mem_data_hold= ready_mem;
+        ready_mem_instr_hold= ready_mem;
+
+        if(read_Mem_data_hold)
+                        read_Mem_data_hold=1'b0;
+        if(write_Mem_instr_hold)
+                        write_Mem_data_hold=1'b0;   
+        end
+                    
     else
         begin
         ready_mem_data_hold= ready_mem;
         ready_mem_instr_hold= ready_mem;
         end
+    end    
  end
 
 assign read_Mem = read_Mem_hold;
