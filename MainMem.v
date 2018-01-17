@@ -8,7 +8,7 @@ module MainMem (clk, CS, OE, WE, Addr, Data_in, Data_out, Ready_Mem);
 //Parameters
 parameter Data_Width = 128;
 parameter Addr_Width = 32;
-parameter RamDepth =  1<<Addr_Width;
+parameter RamDepth =  1<<12;
 
 
   input clk,CS,OE,WE;
@@ -16,7 +16,7 @@ parameter RamDepth =  1<<Addr_Width;
   input [Data_Width-1:0] Data_in;
   output [Data_Width-1:0] Data_out;
   output reg Ready_Mem;
-  reg [31:0] Mem[20:0];
+  reg [31:0] Mem[(RamDepth-1):0];
   reg [Data_Width-1:0] Data_out_hold;
   reg oe_r;
   reg [2:0] count;
@@ -40,7 +40,7 @@ assign Addr_word = {Addr_block,2'b00};
  // Write Operation : When WE = 1, CS = 1
  initial
  begin
-       $readmemb("data.dat", Memorytest) ;
+       //$readmemb("data.dat", Memorytest, 4) ;
  end
  
 initial
@@ -53,7 +53,8 @@ write_hold='d0;
 
 //memory initialisation
   //file_code = $fopen("data.txt") ;
-  $readmemb("data.dat", Mem);
+  $readmemb("Test1.dat", Mem);
+  $readmemb("Test1Data.dat", Mem, 248);
 //    $readmemb("data.dat", Memorytest2) ;
   //$fdisplay(file_code, "HOLA");
   //$fclose(file_code) ;

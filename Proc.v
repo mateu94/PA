@@ -108,6 +108,7 @@ module Proc(
   //  wire [31:0] rgS2_data_ID_EX_OUT;
   //  wire [5:0] control_ID_EX_OUT;
     wire [31:0] immed_sl2;
+    wire [5:0] control_EX_M_IN;
     
         //OUTPUTS
     wire [31:0] w_out_EX_M_OUT;
@@ -236,14 +237,14 @@ module Proc(
     ALU alu(op_ID_EX_OUT, fwS1_data, ALU_S2_DATA, immed_sl2, next_pc_ID_EX_OUT, w_out_EX_M_IN, w_pc_EX_M_IN, w_take_branch_EX_M_IN);
     
     // Multiplexor in case there is a taken branch
-    assign control_ID_EX_OUT[0] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[0];
-    assign control_ID_EX_OUT[1] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[1];
-    assign control_ID_EX_OUT[2] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[2];
-    assign control_ID_EX_OUT[3] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[3];
-    assign control_ID_EX_OUT[4] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[4];
-    assign control_ID_EX_OUT[5] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[5];
+    assign control_EX_M_IN[0] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[0];
+    assign control_EX_M_IN[1] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[1];
+    assign control_EX_M_IN[2] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[2];
+    assign control_EX_M_IN[3] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[3];
+    assign control_EX_M_IN[4] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[4];
+    assign control_EX_M_IN[5] = (w_take_branch_EX_M_OUT) ? 0 : control_ID_EX_OUT[5];
     
-    Reg_EX_M EX_M(clk, reset, write_enable_EX_M, w_out_EX_M_IN, w_pc_EX_M_IN, w_take_branch_EX_M_IN, fwS2_data, control_ID_EX_OUT, rgD_index_ID_EX_OUT,
+    Reg_EX_M EX_M(clk, reset, write_enable_EX_M, w_out_EX_M_IN, w_pc_EX_M_IN, w_take_branch_EX_M_IN, fwS2_data, control_EX_M_IN, rgD_index_ID_EX_OUT,
                  w_out_EX_M_OUT, w_pc_EX_M_OUT, w_take_branch_EX_M_OUT, rgS2_data_EX_M_OUT, control_EX_M_OUT, rgD_index_EX_M_OUT);
     
     assign PCSrc = (w_take_branch_EX_M_OUT && control_EX_M_OUT[4]) ? 1 : 0;

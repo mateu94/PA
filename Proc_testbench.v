@@ -38,10 +38,11 @@ module Proc_testbench();
         clk = 1'b0;
         reset = 1'b1;
         #2
-        
-        
-        //ADDI REG0, 2 -> REG1
         reset = 1'b0;
+        #200
+        
+        /*
+        //ADDI REG0, 2 -> REG1
         #30
         /*ir = 32'b000000000010_00000_000_00001_0010011;
         #2
