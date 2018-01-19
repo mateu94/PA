@@ -42,13 +42,14 @@ module Decode(
     output byte_select_mmu,  //Indicate if the read/write from/to CACHE/MEM is byte/word
     output write_out,       //Indicate if the instruction writes on a REG
     output branch_instr,    //Indicate branch instruction or not
-    output load_instr    //Indicate load instruction or not
+    output load_instr,    //Indicate load instruction or not
+    output mul_instr    //Indicate mul instruction or not
     ); 
         
     wire [4:0] addr_a_sign;
     wire [4:0] addr_b_sign;
         
-    Decoder dec(clk, ir, op, y_sel, addr_a_sign, addr_b_sign, addr_d_out, immed, read_mmu, write_mmu, byte_select_mmu, write_out, branch_instr, load_instr);
+    Decoder dec(clk, ir, op, y_sel, addr_a_sign, addr_b_sign, addr_d_out, immed, read_mmu, write_mmu, byte_select_mmu, write_out, branch_instr, load_instr, mul_instr);
     Registers_Bank registers(clk, reset, addr_a_sign, addr_b_sign, addr_d_in, d_in, write_in, a_out, b_out);
     
     assign addr_a = addr_a_sign;

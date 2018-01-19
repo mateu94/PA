@@ -36,7 +36,8 @@ module Decoder(
     output byte_select_mmu,
     output write,           //write enabled
     output branch_instr,    //Indicate branch instruction or not
-    output load_instr       //Indicate load instruction or not
+    output load_instr,       //Indicate load instruction or not
+    output mul_instr
     );
         
     reg [4:0] addr_a_sign;
@@ -51,6 +52,7 @@ module Decoder(
     reg write_sign;
     reg branch_instr_sign;
     reg load_instr_sign;
+    reg mul_instr_sign;
     
     wire [6:0] op_code;
     wire [13:0] op_funct3_sign;
@@ -73,6 +75,7 @@ module Decoder(
                     write_mmu_sign = 1'b0;
                     load_instr_sign = 1'b0;
                     branch_instr_sign = 1'b0;
+                    mul_instr_sign = (op_funct7_sign == `MUL) ? 1 : 0;
                 end
             `I1: begin  //LDB, LDW
                     op_output_sign = op_funct3_sign;
@@ -84,6 +87,7 @@ module Decoder(
                     byte_select_mmu_sign = (op_funct3_sign == `LDB) ? 1 : 0;
                     branch_instr_sign = 1'b0;
                     load_instr_sign = 1'b1;
+                    mul_instr_sign = 1'b0;
                 end
             `I2: begin  //ADDI
                     op_output_sign = op_funct3_sign;
@@ -94,6 +98,7 @@ module Decoder(
                     write_mmu_sign = 1'b0;
                     branch_instr_sign = 1'b0;
                     load_instr_sign = 1'b0;
+                    mul_instr_sign = 1'b0;
                 end
             `S: begin   //STB, STW
                     immed_sign = $signed({ir[31:25], addr_d_sign});
@@ -105,9 +110,10 @@ module Decoder(
                     byte_select_mmu_sign = (op_funct3_sign == `STB) ? 1 : 0;
                     branch_instr_sign = 1'b0;
                     load_instr_sign = 1'b0;
+                    mul_instr_sign = 1'b0;
                 end
             `B: begin   //BEW
-                    immed_sign = $signed({ir[31], ir[7], ir[30:25], addr_d, 1'b0});
+                    immed_sign = $signed({ir[31], ir[7], ir[30:25], ir[11:8], 1'b0});
                     op_output_sign = op_funct3_sign;
                     write_sign = 1'b0;
                     y_sel_sign = 1'b1;
@@ -115,6 +121,7 @@ module Decoder(
                     write_mmu_sign = 1'b0;
                     branch_instr_sign = 1'b1;
                     load_instr_sign = 1'b0;
+                    mul_instr_sign = 1'b0;
                 end
             `J: begin   //JUMP
                     //Not sure right now how to decode this instruction
@@ -127,6 +134,7 @@ module Decoder(
                     write_mmu_sign = 1'b0;
                     branch_instr_sign = 1'b0;
                     load_instr_sign = 1'b0;
+                    mul_instr_sign = 1'b0;
                     //jump_instr_sign = 1'b1;
                 end
             default: begin
@@ -139,6 +147,7 @@ module Decoder(
                     write_sign = 1'b0;
                     branch_instr_sign = 1'b0;
                     load_instr_sign = 1'b0;
+                    mul_instr_sign = 1'b0;
                 end
         endcase
     end
@@ -156,6 +165,7 @@ module Decoder(
     assign write = write_sign;
     assign branch_instr = branch_instr_sign;
     assign load_instr = load_instr_sign;
+    assign mul_instr = mul_instr_sign;
 
 endmodule
 

@@ -54,6 +54,7 @@ write_hold='d0;
 //memory initialisation
   //file_code = $fopen("data.txt") ;
   $readmemb("Test1.dat", Mem);
+  //$readmemb("TestMul.dat", Mem);
   $readmemb("Test1Data.dat", Mem, 248);
 //    $readmemb("data.dat", Memorytest2) ;
   //$fdisplay(file_code, "HOLA");

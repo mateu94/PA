@@ -1,5 +1,6 @@
 `timescale 1ns / 1ps
 module Cache_Controller(
+input clk,
 input read_Mem_data,
 input write_Mem_data,
 input read_Mem_instr,
@@ -21,7 +22,9 @@ input [127:0] Data_Mem_read,
 output [127:0] Data_Mem_write,
 
 output ready_mem_data,
-output ready_mem_instr 
+output ready_mem_instr, 
+output mem_busy_data,
+output mem_busy_instr
 );
 
 reg read_Mem_hold;
@@ -39,17 +42,28 @@ reg write_Mem_instr_hold;
 
 reg ready_mem_data_hold;
 reg ready_mem_instr_hold;
+reg [127:0] Data_Mem_data_read_hold;
+reg [127:0] Data_Mem_instr_read_hold;
+
+
 
 //assign Data_Mem = (write_Mem_data || write_Mem_instr)? (write_Mem_data? Data_Mem_data: Data_Mem_instr) : 128'dz;
-assign Data_Mem_data_read = Data_Mem_read;
-assign Data_Mem_instr_read = Data_Mem_read;
-assign Data_Mem_write = Data_Mem_data_write;                      
+
+assign Data_Mem_write = Data_Mem_data_write;
+assign mem_busy_data = !ready_mem;     
+assign mem_busy_instr = !ready_mem;                      
+                 
 
 initial
-begin
-ready_mem_data_hold = 1'b1;
-ready_mem_instr_hold = 1'b1;
-end 
+    begin
+        read_Mem_data_hold = 1'b0; 
+        write_Mem_data_hold =1'b0; 
+        read_Mem_instr_hold =1'b0; 
+        write_Mem_instr_hold =1'b0; 
+        
+        ready_mem_data_hold = 1'b0;
+        ready_mem_instr_hold = 1'b0;
+    end 
 
 always@(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr)
  begin
@@ -57,8 +71,10 @@ always@(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr)
     if(read_Mem_data || write_Mem_data)
        begin
        read_Mem_hold = read_Mem_data;
+ 
        write_Mem_hold = write_Mem_data;
        Addr_Mem_hold = Addr_Mem_data;
+       ready_mem_data_hold = 1'b0;
        
        if(read_Mem_data)
           read_Mem_data_hold=read_Mem_data;
@@ -66,11 +82,12 @@ always@(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr)
                     write_Mem_data_hold=write_Mem_data;   
           
        end
-    else if(read_Mem_instr || write_Mem_instr)
+    else if(read_Mem_instr || write_Mem_instr )
        begin
        read_Mem_hold = read_Mem_instr;
        write_Mem_hold = write_Mem_instr;
        Addr_Mem_hold = Addr_Mem_instr;
+        ready_mem_instr_hold = 1'b0;
        
        if(read_Mem_instr)
                 read_Mem_instr_hold=read_Mem_instr;
@@ -78,12 +95,12 @@ always@(read_Mem_data, write_Mem_data, read_Mem_instr, write_Mem_instr)
                 write_Mem_instr_hold=write_Mem_instr; 
        end
     
-/*    else if(read_Mem_instr_hold)
-              begin
-              read_Mem_hold = read_Mem_instr_hold;           
-              Addr_Mem_hold = Addr_Mem_instr; 
-              end  */
-       
+  /*  else if(read_Mem_instr_hold)
+          begin
+          read_Mem_hold = read_Mem_instr_hold;           
+          Addr_Mem_hold = Addr_Mem_instr; 
+          end  */
+
     else
        begin
        read_Mem_hold = 1'b0;
@@ -97,14 +114,30 @@ always @(ready_mem)
  begin
  if(!ready_mem)
     begin
-    ready_mem_data_hold= ready_mem;
-    ready_mem_instr_hold= ready_mem;
+     if((read_Mem_data_hold || write_Mem_data_hold) && (read_Mem_instr_hold || write_Mem_instr_hold) )
+        begin
+        ready_mem_data_hold= ready_mem;
+        ready_mem_instr_hold= ready_mem;
+        end
+     else if (read_Mem_instr_hold || write_Mem_instr_hold)
+        begin
+        ready_mem_instr_hold= ready_mem;
+        end 
+     else if (read_Mem_data_hold || write_Mem_data_hold)
+        begin
+        ready_mem_data_hold= ready_mem;
+        end    
+             
     end
  else
    begin  
     if((read_Mem_data_hold || write_Mem_data_hold) && (read_Mem_instr_hold || write_Mem_instr_hold) )
         begin
-        ready_mem_data_hold= ready_mem;
+        ready_mem_data_hold= 1'b1;
+        Data_Mem_data_read_hold = Data_Mem_read;
+
+        read_Mem_hold = 1'b1;
+        Addr_Mem_hold = Addr_Mem_instr; 
         if(read_Mem_data_hold)
                   read_Mem_data_hold= 1'b0;
         if(write_Mem_data_hold)
@@ -112,9 +145,10 @@ always @(ready_mem)
         end
     else if (read_Mem_instr_hold || write_Mem_instr_hold)
         begin
-        ready_mem_instr_hold= ready_mem;
-        ready_mem_data_hold= ready_mem;
+        ready_mem_instr_hold= 1'b1;
+        Data_Mem_instr_read_hold = Data_Mem_read;
 
+        
         if(read_Mem_instr_hold)
                         read_Mem_instr_hold=1'b0;
         if(write_Mem_instr_hold)
@@ -123,8 +157,9 @@ always @(ready_mem)
         
     else if (read_Mem_data_hold || write_Mem_data_hold)
         begin
-        ready_mem_data_hold= ready_mem;
-        ready_mem_instr_hold= ready_mem;
+        ready_mem_data_hold= 1'b1;
+        Data_Mem_data_read_hold = Data_Mem_read;
+
 
         if(read_Mem_data_hold)
                         read_Mem_data_hold=1'b0;
@@ -132,11 +167,7 @@ always @(ready_mem)
                         write_Mem_data_hold=1'b0;   
         end
                     
-    else
-        begin
-        ready_mem_data_hold= ready_mem;
-        ready_mem_instr_hold= ready_mem;
-        end
+   
     end    
  end
 
@@ -148,5 +179,7 @@ assign Data_Mem_write = Data_Mem_write_hold;
 assign ready_mem_data = ready_mem_data_hold;
 assign ready_mem_instr = ready_mem_instr_hold;
 
+assign Data_Mem_data_read = Data_Mem_data_read_hold;
+assign Data_Mem_instr_read = Data_Mem_instr_read_hold;
 
 endmodule

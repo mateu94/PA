@@ -10,6 +10,7 @@ module Reg_ID_EX(
     input write_reg,
     input br_ins,
     input ld_ins,
+    input mul_ins,
 
     input [13:0] opcode_in,
     input [31:0] rgS1_data_in,
@@ -28,7 +29,7 @@ module Reg_ID_EX(
     output [31:0] immed_out,
     output y_sel_out,
 
-    output [5:0] control_out,
+    output [6:0] control_out,
     output [4:0] rgS1_index_out,
     output [4:0] rgS2_index_out,
     output [4:0] rgD_index_out 
@@ -41,7 +42,7 @@ module Reg_ID_EX(
     wire [31:0] immed_hold;
     wire y_sel_hold;
 
-    wire [5:0] control_hold;
+    wire [6:0] control_hold;
     wire [4:0] rgD_index_hold;
  
 
@@ -91,6 +92,7 @@ module Reg_ID_EX(
         FlipFlop r_c3(clk, reset, write_reg, write_enable, control_out[3]);//_hold[3]);   //Write to a reg
         FlipFlop r_c4(clk, reset, br_ins, write_enable, control_out[4]);   //Branch instruction or not
         FlipFlop r_c5(clk, reset, ld_ins, write_enable, control_out[5]);   //Load instruction or not
+        FlipFlop r_c6(clk, reset, mul_ins, write_enable, control_out[6]);   //Mul instruction or not
               
     endgenerate
         

@@ -14,18 +14,38 @@ module PC_Incrementer
 
     reg [31:0] PC_hold;
     reg [31:0] next_PC_hold;
+    reg flag;
     
-    always@(posedge clk)
+    always@(negedge clk)
     begin
+       
         if (reset)
         begin
-            PC_hold = 32'd0;
+            PC_hold = 32'd0 - 4;
             next_PC_hold = 32'd0;
+            flag = 1'b0;
+        end
+        else if (stall)
+        begin      
+        flag = 1'b1;
         end
         else if (!stall)
         begin
-            PC_hold = PCSrc? PC_branch : PC_hold + 4;
-            next_PC_hold = PC_hold + 4;     // blocking operation above, so next_PC will be 4 more than current PC 
+           /* if (!flag)
+                begin
+                flag = 1'b0;
+                PC_hold = PCSrc? PC_branch - 4 : PC_hold + 4;
+                next_PC_hold = PC_hold + 4;     // blocking operation above, so next_PC will be 4 more than current PC 
+                end
+           else 
+                begin
+                if (PCSrc)
+                   begin
+                   PC_hold = PC_branch - 4;
+                   end
+                flag = 1'b0;
+                end   */
+        PC_hold = PCSrc? PC_branch - 4 : PC_hold + 4;        
         end
     end
     

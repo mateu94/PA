@@ -37,7 +37,7 @@ module Proc_testbench();
     begin
         clk = 1'b0;
         reset = 1'b1;
-        #2
+        #4
         reset = 1'b0;
         #200
         

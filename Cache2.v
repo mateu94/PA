@@ -25,6 +25,7 @@ module Cache2
          output reg Stall_PC,
         
          input ready_mem,
+         input mem_busy,
 
          input [(Word_Size*Block_Size)-1:0] Data_Mem_read,
          output [(Word_Size*Block_Size)-1:0] Data_Mem_write,
@@ -32,6 +33,7 @@ module Cache2
          output reg read_Mem,
          output reg write_Mem            
          );
+         
 
 
 reg [31:0] addr_latch ;
@@ -71,17 +73,20 @@ reg readnotwrite;
 reg from_read;                  // used as a flag to resuse the state for READMM and WAIT for a cache miss (read or write). We are using a write allocate policy 
 //reg word_number; 
 
-localparam IDLE		= 3'd0,	
-	   READ		= 3'd1,
-	   WRITE	= 3'd2,
-	   READMM	= 3'd3,
+localparam IDLE		    = 3'd0,	
+           READ		    = 3'd1,
+           WRITE	    = 3'd2,
+           READMM	    = 3'd3,
            WAIT	        = 3'd4,
-	   UPDATEMM	= 3'd5,
-	   IDLE_WRITE   = 3'd6,
+           UPDATEMM	    = 3'd5,
+           IDLE_WRITE   = 3'd6,
            WRITEMM      = 3'd7;
        
 reg [2:0] state;
 reg state_cycle;
+
+
+
 
 assign hit_BUF= (hit_buf[0]||hit_buf[1]||hit_buf[2]||hit_buf[3]||hit_buf[4]||hit_buf[5]||hit_buf[6]||hit_buf[7]);
 
@@ -258,7 +263,7 @@ begin
                               write_Mem <= 'd0; 
                               if(!waiting) 
                                  begin 
-                                 if(ready_mem)
+                                 if(!mem_busy)
                                     begin 
                                     read_Mem <= 'd1;                                   
                                     Addr_Mem <={addr_latch [31:4],4'b0000}; 
@@ -272,6 +277,7 @@ begin
                                  if(ready_mem)
                                    begin
                                    state<=WAIT;
+                                   state_cycle<= ~state_cycle; 
                                    sequential_control= 'd0;
                                    end
                                  else
@@ -412,7 +418,7 @@ begin
                                      begin
                                      // Eviction!!!!
                                      Stall_PC<= 'd1;
-                                     if (ready_mem && !write_Mem)
+                                     if (!mem_busy && !write_Mem)
                                         begin
                                         write_Mem<= 'd1;
                                         Addr_Mem <={tag0[addr_latch[4]][26:0],addr_latch[4],4'b0000};           // TO BE ADDED!!!!!       
@@ -438,7 +444,7 @@ begin
                                      begin
                                      // Eviction!!!!
                                      Stall_PC<= 'd1;
-                                     if (ready_mem && !write_Mem)
+                                     if (!mem_busy && !write_Mem)
                                         begin
                                         write_Mem<= 'd1;
                                         Addr_Mem <={tag1[addr_latch[4]][26:0],addr_latch[4],4'b0000};           // TO BE ADDED!!!!!       
