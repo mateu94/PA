@@ -2,17 +2,20 @@
 R0 = 0
 R1 = 128
 R2 = 5
-R3 = Address a
-R4 = Address b
+R3 = Address a (992)
+R4 = Address b (1504)
 R5 = i
+R6 = element
 */
 
 ADDI R0, 128 -> R1
 ADDI R0, 5 -> R2
+ADDI R0, 992 -> R3
+ADDI R0, 1504 -> R4
 FOR1:	STW R2 -> 0(R3)
 	ADDI R3, 4 -> R3
 	ADDI R5, 1 -> R5
-	BNE R5, R1 -> FOR1 (-12)
+	BNE R5, R1 -> FOR1 (-3)
 	
 ADD R0, R0 -> R5
 ADDI R3, -(4*128) -> R3
@@ -20,6 +23,6 @@ ADDI R3, -(4*128) -> R3
 FOR2:	LDW 0(R3) -> R6
 	STW R6 -> 0(R4)
 	ADDI R4, 4 -> R4
+	ADDI R3, 4 -> R3
 	ADDI R5, 1 -> R5
-	BNE R5, R1 -> FOR2 (-16)
-	
+	BNE R5, R1 -> FOR2 (-5)
