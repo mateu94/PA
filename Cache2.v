@@ -22,7 +22,8 @@ module Cache2
          input [Word_Size-1:0] Data_CPU_write,
          output [Word_Size-1:0] Data_CPU_read,
          input [Word_Size-1:0] Addr_CPU,
-         output reg Stall_PC,
+         output hit_plus_Stall_PC,
+//         output reg Stall_PC,
         
          input ready_mem,
          input mem_busy,
@@ -65,6 +66,10 @@ reg [127:0]data_block;  // check whether needed
 wire hit0;
 wire hit1;
 wire hit;
+reg Stall_PC;
+reg cache_used;
+
+assign hit_plus_Stall_PC = ((!hit && (state == 0 )) || Stall_PC) && cache_used;
 
 
 wire usedbit0;
@@ -134,6 +139,7 @@ begin
               write_block <= 128'd0;
               data_block <= 128'd0;
                      
+              cache_used <= 'd0;                 
                                
               readnotwrite = 'd1;
              
@@ -144,14 +150,12 @@ begin
           begin  
                case (state)
                     IDLE :  begin 
-                            
+                           
                             Stall_PC = 'd0;
                             Addr_Mem <= 'd0;
                             read_Mem <= 'd0;
                             write_Mem <= 'd0;
-                            write_block <= 128'd0;
-                            
- 
+                            write_block <= 128'd0;                                                   
                             
                             hit_buf <= 'd0;
                             
@@ -163,6 +167,8 @@ begin
                                state <= READ;
                                state_cycle<= ~state_cycle;
                                readnotwrite= 'd1;
+                               cache_used <= 'd1;                 
+
                                end
                             else if ( write_CPU)
                                begin
@@ -171,6 +177,7 @@ begin
                                state_cycle<= ~state_cycle;
                                data_latch <= Data_CPU_write; 
                                readnotwrite= 'd0;
+                               cache_used <= 'd1;                 
                                end
                             else if(tail!=10)
                                begin
@@ -181,6 +188,8 @@ begin
                             else      
                                begin 
                                state <= IDLE;
+                               
+                 //              addr_latch <= {tag0[0][26:0],5'b00000};
                                end                           
                             end
                      
